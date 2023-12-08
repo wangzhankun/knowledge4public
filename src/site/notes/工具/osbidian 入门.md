@@ -13,10 +13,9 @@ https://www.bilibili.com/video/BV1i3411k7TQ/?spm_id_from=333.999.0.0&vd_source=4
 # 发布为网页
 
 ## 图床配置
-![2023-12-07_13-29.png](https://cdn.jsdelivr.net/gh/wangzhankun/img-repo/2023-12-07_13-29.png)
 
-* [如何利用 Github 搭建自己的免费图床？](https://zhuanlan.zhihu.com/p/353775844)
-* [【Obsidian绝配！】为你的OB搭建专属图床，保姆级教程！](https://sspai.com/post/75765)
+[[工具/picgo\|picgo]]
+
 
 ## DIgitalGarden
 *  [Hi , Obsidian Digital Garden](https://immmmm.com/hi-obsidian-digital-garden/)
