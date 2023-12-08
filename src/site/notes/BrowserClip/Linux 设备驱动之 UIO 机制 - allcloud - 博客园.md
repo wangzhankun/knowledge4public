@@ -1,5 +1,5 @@
 ---
-{"page-title":"Linux 设备驱动之 UIO 机制 - allcloud - 博客园","url":"https://www.cnblogs.com/allcloud/p/7808776.html","date":"2023-12-08 17:02:02","tags":["用户态驱动","OS/Linux"],"dg-publish":true,"permalink":"/BrowserClip/Linux 设备驱动之 UIO 机制 - allcloud - 博客园/","dgPassFrontmatter":true}
+{"page-title":"Linux 设备驱动之 UIO 机制 - allcloud - 博客园","url":"https://www.cnblogs.com/allcloud/p/7808776.html","date":"2023-12-08","tags":["用户态驱动","OS/Linux"],"dg-publish":true,"permalink":"/BrowserClip/Linux 设备驱动之 UIO 机制 - allcloud - 博客园/","dgPassFrontmatter":true}
 ---
 
 [原始文档](https://www.cnblogs.com/allcloud/p/7808776.html)
