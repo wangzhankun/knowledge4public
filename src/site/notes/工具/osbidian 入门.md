@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"tags":["入门指南"],"permalink":"/工具/osbidian 入门/","dgPassFrontmatter":true}
+{"dg-publish":true,"tags":["入门指南","osbidian"],"permalink":"/工具/osbidian 入门/","dgPassFrontmatter":true}
 ---
 
 ## 入门
