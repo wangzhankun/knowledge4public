@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"tags":["入门指南"],"permalink":"/工具/RISC-V体系结构入门/","dgPassFrontmatter":true}
+{"dg-publish":true,"tags":["入门指南","riscv"],"permalink":"/工具/RISC-V体系结构入门/","dgPassFrontmatter":true}
 ---
 
 
