@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"date":"2023-12-08","time":"09:31","progress":"进行中","tags":["入门指南","riscv","内核"],"permalink":"/工具/xv6-riscv内核入门/","dgPassFrontmatter":true}
+{"dg-publish":true,"date":"2023-12-08","time":"09:31","progress":"进行中","tags":["入门指南","riscv","OS"],"permalink":"/工具/xv6-riscv内核入门/","dgPassFrontmatter":true}
 ---
 
 ## 内核
