@@ -40,7 +40,7 @@ ENS̄o是围绕ENS̄o Pipe设计的，这是一种新的缓冲区抽象，允许
 
 ## Overview
 
-![](https://gitee.com/wangzhankun/img-repo/raw/main/Rozub0dcHocAS8xTQHocWm5vnBh.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/Rozub0dcHocAS8xTQHocWm5vnBh.png)
 
 1. 假设有两个Pipe来接收数据A和B，最开始都是空的, $HEAD_{SW}$ 和$Tail_{NIC}$都指向数据缓冲区的开头
 1. 当NIC收到数据之后，把数据分片填充到Pipe A和Pipe B，其中A填充了两条数据，B填充了3条数据。NIC发送两个通知（一个PIPE各一个），软件使用这些通知移动$Tail_{NIC}$并开始处理数据
@@ -52,7 +52,7 @@ Ens̄o管道的不透明性意味着它们可以映射到应用程序内存空�
 
 ## Efficient Notifications
 
-![](https://gitee.com/wangzhankun/img-repo/raw/main/N2iPbqVCWoNmW2xmbADcf2u2n9g.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/N2iPbqVCWoNmW2xmbADcf2u2n9g.png)
 
 ENSO 设计了通知缓冲区来通知指针的修改。
 
@@ -85,7 +85,7 @@ Notifications包含给定的Pipe的最新的$Tail_{NIC}$，以及一个flag，�
 
 ###  RX
 
-![](https://gitee.com/wangzhankun/img-repo/raw/main/VPx5bRBTZok027xprDrc7EI0nlc.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/VPx5bRBTZok027xprDrc7EI0nlc.png)
 
 NS̄o管道管理器负责保持ENS̄o管道状态，例如缓冲区的物理地址、HeadSW、TailNIC、通知缓冲区ID和通知状态位。
 
@@ -95,7 +95,7 @@ NS̄o管道管理器负责保持ENS̄o管道状态，例如缓冲区的物理地
 
 ### TX
 
-![](https://gitee.com/wangzhankun/img-repo/raw/main/D0S1bDeUZoEOifxhmfAcxyznnCh.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/D0S1bDeUZoEOifxhmfAcxyznnCh.png)
 
 当软件将新的TX通知入队并使用MMIO写入NotificationTailSW时，管理器请求DMA读取以从存储器获取通知。读请求被发送到DMA引擎，该引擎将对通知FIFO的DMA读响应排队。然后，管理器可以使用通知，从而允许它请求对ens̄o管道中的实际数据进行直接存储器访问读取。它还将有关每个数据请求的信息发送到完成监视器模块。
 
