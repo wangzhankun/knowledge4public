@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"date":"2023-12-08","time":"15:38","progress":"进行中","tags":["入门"],"permalink":"/工具/picgo/","dgPassFrontmatter":true}
+{"dg-publish":true,"date":"2023-12-08","time":"15:38","progress":"进行中","tags":["入门指南"],"permalink":"/工具/picgo/","dgPassFrontmatter":true}
 ---
 
 
