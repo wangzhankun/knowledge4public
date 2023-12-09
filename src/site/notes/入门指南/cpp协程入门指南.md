@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"date":"2023-12-08","time":"22:08","progress":"进行中","tags":["入门指南"],"permalink":"/入门指南/cpp协程入门指南/","dgPassFrontmatter":true}
+{"dg-publish":true,"date":"2023-12-08","time":"22:08","progress":"进行中","tags":["入门指南","cpp","协程"],"permalink":"/入门指南/cpp协程入门指南/","dgPassFrontmatter":true}
 ---
 
 
@@ -16,5 +16,6 @@
 ## ALL Files
 - [[编程语言/C++/协程/C++20协程原理和应用 - 知乎\|C++20协程原理和应用 - 知乎]]
 - [[BrowserClip/Coroutines (C++20) - cppreference.com --- 协程 (C++20) - cppreference.com\|Coroutines (C++20) - cppreference.com --- 协程 (C++20) - cppreference.com]]
+- [[入门指南/cpp协程入门指南\|cpp协程入门指南]]
 
 { .block-language-dataview}
