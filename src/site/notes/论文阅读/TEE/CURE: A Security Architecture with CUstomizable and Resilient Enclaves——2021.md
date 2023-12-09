@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/论文阅读/TEE/CURE: A Security Architecture with CUstomizable and Resilient Enclaves——2021/","dgPassFrontmatter":true}
+{"dg-publish":true,"tags":["论文","TEE"],"permalink":"/论文阅读/TEE/CURE: A Security Architecture with CUstomizable and Resilient Enclaves——2021/","dgPassFrontmatter":true}
 ---
 
 
@@ -44,7 +44,7 @@
 
 下图中的$Encl_1$是user-space enclave，$Encl_2$是only kernel-space enclave，$Encl_3$是both kernel and user space enclave
 
-![](/img/user/论文阅读/TEE/assets/boxcna7OHrPlcDzqkoZ6xd9lLud.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcna7OHrPlcDzqkoZ6xd9lLud.png)
 
 ### enclave管理
 
@@ -78,7 +78,7 @@ U-Enclave依赖于OS的内存管理、异常/中断处理、系统调用等。OS
 
 ## 硬件安全原语
 
-![](/img/user/论文阅读/TEE/assets/boxcnSa8MJNp4Czlylq8tBvqWVb.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcnSa8MJNp4Czlylq8tBvqWVb.png)
 
 ### 定义enclave执行上下文
 
