@@ -4,4 +4,15 @@
 
 
 
-请看侧边栏找你感兴趣的内容！
+- [[工具/一般软件学习\|一般软件学习]]
+- [[工具/xv6-riscv内核入门\|xv6-riscv内核入门]]
+- [[工具/osbidian 入门\|osbidian 入门]]
+- [[工具/QEMU 入门\|QEMU 入门]]
+- [[入门指南/Keystone TEE入门指南\|Keystone TEE入门指南]]
+- [[入门指南/CMU-15445速通入门\|CMU-15445速通入门]]
+- [[入门指南/cpp协程入门指南\|cpp协程入门指南]]
+- [[入门指南/交叉编译入门指南\|交叉编译入门指南]]
+- [[入门指南/RISC-V体系结构入门\|RISC-V体系结构入门]]
+- [[工具/picgo\|picgo]]
+
+{ .block-language-dataview}
