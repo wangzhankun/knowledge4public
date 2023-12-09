@@ -14,3 +14,6 @@
 ```sh
 cd /home/wang/opt/picgo && env PATH=/home/wang/opt/go/bin:$PATH ./PicGo-2.3.1.AppImage
 ```
+
+
+PS: 好吧，我放弃白瞟了，太难用了，买了腾讯的cos.
