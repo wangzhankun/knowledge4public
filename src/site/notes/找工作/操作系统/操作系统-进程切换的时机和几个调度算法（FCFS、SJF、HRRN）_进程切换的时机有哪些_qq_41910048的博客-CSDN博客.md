@@ -34,7 +34,7 @@
 
 
 
-![](https://gitee.com/wangzhankun/img-repo/raw/main/R82vb4H5JoSzZGxQd4XcCNfRnoc.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/R82vb4H5JoSzZGxQd4XcCNfRnoc.png)
 
 
 
@@ -42,7 +42,7 @@
 
 
 
-![](https://gitee.com/wangzhankun/img-repo/raw/main/EDlTbRPqFo2TwtxdSRncvMbJnGg.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/EDlTbRPqFo2TwtxdSRncvMbJnGg.png)
 
 
 
@@ -60,7 +60,7 @@
 
 
 
-![](https://gitee.com/wangzhankun/img-repo/raw/main/ImuXbroIxo6YXRxpkNrccxj9nZf.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/ImuXbroIxo6YXRxpkNrccxj9nZf.png)
 
 
 
@@ -80,7 +80,7 @@ p4: 周转时间=16-5=11;带权周转时间=16-5/4=2.75;等待时间=16-5-4=7;
 
 
 
-![](https://gitee.com/wangzhankun/img-repo/raw/main/JZUlbFm9Go3QAcx3qvOcLxg0nVc.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/JZUlbFm9Go3QAcx3qvOcLxg0nVc.png)
 
 
 
@@ -88,7 +88,7 @@ p4: 周转时间=16-5=11;带权周转时间=16-5/4=2.75;等待时间=16-5-4=7;
 
 
 
-![](https://gitee.com/wangzhankun/img-repo/raw/main/HQ9bbIL5coNRcJxvdwXcZBnunlg.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/HQ9bbIL5coNRcJxvdwXcZBnunlg.png)
 
 
 
@@ -106,7 +106,7 @@ p4: 周转时间=16-5=11;带权周转时间=16-5/4=2.75;等待时间=16-5-4=7;
 
 
 
-![](https://gitee.com/wangzhankun/img-repo/raw/main/YjN1bSAJhocUGgxJFT4cYpqCnMi.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/YjN1bSAJhocUGgxJFT4cYpqCnMi.png)
 
 
 
@@ -144,7 +144,7 @@ SJF调度算法不一定平均周转时间少，但是比起FCFS调度算法，S
 
 
 
-![](https://gitee.com/wangzhankun/img-repo/raw/main/PlfLblheroUSYgxlFimcaiqUn7c.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/PlfLblheroUSYgxlFimcaiqUn7c.png)
 
 
 
@@ -154,13 +154,13 @@ SJF调度算法不一定平均周转时间少，但是比起FCFS调度算法，S
 
 
 
-![](https://gitee.com/wangzhankun/img-repo/raw/main/N8CybqDHyovf8yxaS26cb6jjnhd.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/N8CybqDHyovf8yxaS26cb6jjnhd.png)
 
 
 
 
 
-![](https://gitee.com/wangzhankun/img-repo/raw/main/LQaAb1ErFoMG7dxO50ocjKMMnIb.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/LQaAb1ErFoMG7dxO50ocjKMMnIb.png)
 
 
 
@@ -168,7 +168,7 @@ SJF调度算法不一定平均周转时间少，但是比起FCFS调度算法，S
 
 
 
-![](https://gitee.com/wangzhankun/img-repo/raw/main/SsW8b1IeVoC9IexJfsbc9PJJn0g.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/SsW8b1IeVoC9IexJfsbc9PJJn0g.png)
 
 
 
@@ -185,16 +185,4 @@ SJF调度算法不一定平均周转时间少，但是比起FCFS调度算法，S
 在12时刻，P2进程完成，主动放弃CPU,就绪队列中只剩下P4,P4进程进入处理器。
 
 **由于HNNR调度算法考虑了等待时间和运行时间，所以等待时间相同时，服务时间短的作业优先。服务时间相同时，等待时间长的作业优先，那么对于长作业来说，进入就绪队列的时间越久，响应比就越大，进入CPU的机会就越大了，也就避免了“饥饿”的问题。**
-
-
-
-
-
-
-
-
-
-   
-
-显示推荐内容
 
