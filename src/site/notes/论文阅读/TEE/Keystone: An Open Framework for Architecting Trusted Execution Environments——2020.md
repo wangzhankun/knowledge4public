@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/论文阅读/TEE/Keystone: An Open Framework for Architecting Trusted Execution Environments——2020/","dgPassFrontmatter":true}
+{"dg-publish":true,"tags":["论文","TEE"],"permalink":"/论文阅读/TEE/Keystone: An Open Framework for Architecting Trusted Execution Environments——2020/","dgPassFrontmatter":true}
 ---
 
 
@@ -73,7 +73,7 @@ Keystone使用操作系统生成的页表进行初始化，然后在执行期间
 
 在销毁时，SMhi清除enclave内存空间，之后将内存交还给OS。
 
-![](https://cdn.jsdelivr.net/gh/wangzhankun/img-repo/boxcnWQqlYVlRtr4R1p2X1y1s5d.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcnWQqlYVlRtr4R1p2X1y1s5d.png)
 
 ### Keystone支持的原语
 
@@ -141,5 +141,5 @@ Keystone可以通过平台功能和对BootLoader的拟议修改来防御物理�
 | | |
 # 其它相关材料
 
-
+[[入门指南/Keystone TEE入门指南\|Keystone TEE入门指南]]
 
