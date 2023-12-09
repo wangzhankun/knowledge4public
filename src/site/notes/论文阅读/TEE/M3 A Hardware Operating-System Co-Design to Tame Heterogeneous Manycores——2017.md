@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/论文阅读/TEE/M3 A Hardware Operating-System Co-Design to Tame Heterogeneous Manycores——2017/","dgPassFrontmatter":true}
+{"dg-publish":true,"tags":["TEE","论文"],"permalink":"/论文阅读/TEE/M3 A Hardware Operating-System Co-Design to Tame Heterogeneous Manycores——2017/","dgPassFrontmatter":true}
 ---
 
 
@@ -30,7 +30,7 @@
 
 # **方法**
 
-![](/img/user/论文阅读/TEE/assets/I0jIbcR3eo5uCCx3MzScJbeKnEd.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/I0jIbcR3eo5uCCx3MzScJbeKnEd.png)
 
 1. 系统内核、服务与APP分别运行在不同的PE（是指各种计算资源）上
 1. PE是否处于内核态是由DTU决定的，而非处理器的特权级模式决定的
@@ -42,7 +42,7 @@
 
 Tomahawk由多个PE组成，通过一个片上网络和一个DRAM模块连接。PE是Xtensa RISC核心，没有特权模式，也没有MMU。此外，它们使用便签式存储器(SPM)而不是高速缓存作为唯一可直接寻址的存储器。
 
-![](/img/user/论文阅读/TEE/assets/W2BZbcJFKoxkUAxFQjvc4iawnih.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/W2BZbcJFKoxkUAxFQjvc4iawnih.png)
 
 在硬件方面，如图2所示，DTU由多个端点(EP)组成。每个端点都可以配置为发送端点、接收端点或存储端点。配置寄存器(缓冲区、目标、信用和标签)仅可由内核PE写入，而数据寄存器也可由应用PE写入。
 
