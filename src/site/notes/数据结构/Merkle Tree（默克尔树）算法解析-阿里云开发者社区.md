@@ -10,7 +10,7 @@
 
 
 
-![](/img/user/数据结构/assets/boxcnyR807hNKgKMH0wYx026SLg.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcnyR807hNKgKMH0wYx026SLg.png)
 
 Merkle Tree，通常也被称作Hash Tree，顾名思义，就是存储hash值的一棵树。Merkle树的叶子是数据块(例如，文件或者文件的集合)的hash值。非叶节点是其对应子节点串联字符串的hash。[1]
 
@@ -20,7 +20,7 @@ Merkle Tree，通常也被称作Hash Tree，顾名思义，就是存储hash值�
 
 Hash是一个把任意长度的数据映射成固定长度数据的函数[2]。例如，对于数据完整性校验，最简单的方法是对整个数据做Hash运算得到固定长度的Hash值，然后把得到的Hash值公布在网上，这样用户下载到数据之后，对数据再次进行Hash运算，比较运算结果和网上公布的Hash值进行比较，如果两个Hash值相等，说明下载的数据没有损坏。可以这样做是因为输入数据的稍微改变就会引起Hash运算结果的面目全非，而且根据Hash值反推原始输入数据的特征是困难的。[3] 
 
-![](/img/user/数据结构/assets/boxcno9Y80CXCGEdqSFY9IfmQdU.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcno9Y80CXCGEdqSFY9IfmQdU.png)
 
 
 
@@ -32,7 +32,7 @@ Hash是一个把任意长度的数据映射成固定长度数据的函数[2]。�
 
 怎么确定小的数据块没有损坏哪？只需要为每个数据块做Hash。BT下载的时候，在下载到真正数据之前，我们会先下载一个Hash列表。那么问题又来了，怎么确定这个Hash列表本事是正确的哪？答案是把每个小块数据的Hash值拼到一起，然后对这个长字符串在作一次Hash运算，这样就得到Hash列表的根Hash(Top Hash or Root Hash)。下载数据的时候，首先从可信的数据源得到正确的根Hash，就可以用它来校验Hash列表了，然后通过校验后的Hash列表校验数据块。 
 
-![](/img/user/数据结构/assets/boxcnLZqNls8S6cHZ04GXLPnA2e.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcnLZqNls8S6cHZ04GXLPnA2e.png)
 
 
 
@@ -48,7 +48,7 @@ Merkle Tree和Hash List的主要区别是，可以直接下载并立即验证Mer
 
 
 
-![](/img/user/数据结构/assets/boxcn9Clus8ZuvQ2s5F2J2prY3d.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcn9Clus8ZuvQ2s5F2J2prY3d.png)
 
 
 
@@ -78,7 +78,7 @@ Second Preimage Attack: Merkle tree的树根并不表示树的深度，这可能
 
 　　step5：（蓝色线）重复step2，生成Merkle Tree Root 
 
-![](/img/user/数据结构/assets/boxcnuT9DEOe4YpaY6isD5hXaic.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcnuT9DEOe4YpaY6isD5hXaic.png)
 
 易得，创建Merkle Tree是O(n)复杂度(这里指O(n)次hash运算)，n是数据块的大小。得到Merkle Tree的树高是log(n)+1。
 
@@ -88,7 +88,7 @@ Second Preimage Attack: Merkle tree的树根并不表示树的深度，这可能
 
 为了更好理解，我们假设有A和B两台机器，A需要与B相同目录下有8个文件，文件分别是f1 f2 f3 ….f8。这个时候我们就可以通过Merkle Tree来进行快速比较。假设我们在文件创建的时候每个机器都构建了一个Merkle Tree。具体如下图: 
 
-![](/img/user/数据结构/assets/boxcn7Rj463KJ1o3w4tQ68XQLWh.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcn7Rj463KJ1o3w4tQ68XQLWh.png)
 
 从上图可得知，叶子节点node7的value = hash(f1),是f1文件的HASH;而其父亲节点node3的value = hash(v7, v8)，也就是其子节点node7 node8的值得HASH。就是这样表示一个层级运算关系。root节点的value其实是所有叶子节点的value的唯一特征。
 
@@ -108,7 +108,7 @@ Second Preimage Attack: Merkle tree的树根并不表示树的深度，这可能
 
 　　以上过程的理论复杂度是Log(N)。过程描述图如下: 
 
-![](/img/user/数据结构/assets/boxcnK8mhZfGFDQWhe8AptxI0ee.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcnK8mhZfGFDQWhe8AptxI0ee.png)
 
 从上图可以得知真个过程可以很快的找到对应的不相同的文件。
 
@@ -120,9 +120,9 @@ Second Preimage Attack: Merkle tree的树根并不表示树的深度，这可能
 
 　　对于Merkle Tree数据块的更新操作其实是很简单的，更新完数据块，然后接着更新其到树根路径上的Hash值就可以了，这样不会改变Merkle Tree的结构。但是，插入和删除操作肯定会改变Merkle Tree的结构，如下图，一种插入操作是这样的： 
 
-![](/img/user/数据结构/assets/boxcn4AuZpIxrV4Oz3zSkYLLrbc.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcn4AuZpIxrV4Oz3zSkYLLrbc.png)
 
-![](/img/user/数据结构/assets/boxcnpRWOzqDFHJ9k6wcoTJWN9e.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcnpRWOzqDFHJ9k6wcoTJWN9e.png)
 
 而[6]中的同学在考虑一种插入的算法，满足下面条件：
 
@@ -140,7 +140,7 @@ Second Preimage Attack: Merkle tree的树根并不表示树的深度，这可能
 
 然后上面的插入结果就会变成这样： 
 
-![](/img/user/数据结构/assets/boxcnajdH8vHL7qq2DbaHDYUPQb.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcnajdH8vHL7qq2DbaHDYUPQb.png)
 
 根据[6]中回答者所说，Merkle Tree的插入和删除操作其实是一个工程上的问题，不同问题会有不同的插入方法。如果要确保树是平衡的或者是树高是log(n)的，可以用任何的标准的平衡 [二叉树 ](https://so.csdn.net/so/search?from=pc_blog_highlight&q=%E4%BA%8C%E5%8F%89%E6%A0%91)的模式，如AVL树，红黑树，伸展树，2-3树等。这些平衡二叉树的更新模式可以在O(lgn)时间内完成插入操作，并且能保证树高是O(lgn)的。那么很容易可以看出更新所有的Merkle Hash可以在O((lgn)2)时间内完成（对于每个节点如要更新从它到树根O(lgn)个节点，而为了满足树高的要求需要更新O(lgn)个节点）。如果仔细分析的话，更新所有的hash实际上可以在O(lgn)时间内完成，因为要改变的所有节点都是相关联的，即他们要不是都在从某个叶节点到树根的一条路径上，或者这种情况相近。
 
@@ -162,7 +162,7 @@ Second Preimage Attack: Merkle tree的树根并不表示树的深度，这可能
 
 就解决上面两个问题是用一个简单的Merkle Tree代替Hash List。设计一个层数足够多的满二叉树，叶节点是数据块的Hash，不足的叶节点用0来代替。上层的节点是其对应孩子节点串联的hash。Hash算法和普通torrent一样采用SHA1。其数据传输过程和第一节中描述的类似。 
 
-![](/img/user/数据结构/assets/boxcn5qdgBqKZZLHDCpPGhSlJNc.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcn5qdgBqKZZLHDCpPGhSlJNc.png)
 
 3、Trusted Computing
 
@@ -170,7 +170,7 @@ Second Preimage Attack: Merkle tree的树根并不表示树的深度，这可能
 
 可信计算是可信计算组为分布式计算环境中参与节点的计算平台提供端点可信性而提出的。可信计算技术在计算平台的硬件层引入可信平台模块(Trusted Platform，TPM)，实际上为计算平台提供了基于硬件的可信根(Root of trust，RoT)。从可信根出发，使用信任链传递机制，可信计算技术可对本地平台的硬件及软件实施逐层的完整性度量，并将度量结果可靠地保存再TPM的平台配置寄存器(Platform configuration register，PCR)中，此后远程计算平台可通过远程验证机制(Remote Attestation)比对本地PCR中度量结果，从而验证本地计算平台的可信性。可信计算技术让分布式应用的参与节点摆脱了对中心服务器的依赖，而直接通过用户机器上的TPM芯片来建立信任，使得创建扩展性更好、可靠性更高、可用性更强的安全分布式应用成为可能[10]。可信计算技术的核心机制是远程验证(remote attestation),分布式应用的参与结点正是通过远程验证机制来建立互信,从而保障应用的安全。 
 
-![](/img/user/数据结构/assets/boxcn73UiDkjG0XBLxP1KfOPXwf.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcn73UiDkjG0XBLxP1KfOPXwf.png)
 
 文献[10]提出了一种基于Merkle Tree的远程验证机制，其核心是完整性度量值哈希树。
 
@@ -212,7 +212,7 @@ Bitcoin如何查询你当前有多少币？一个比特币轻客户端，可以�
 * 收据Receipts(本质上是显示每个交易影响的多块数据)
 * 状态State 
 
-![](/img/user/数据结构/assets/boxcn1ekOWsoImPUVGle6TcrZ1b.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcn1ekOWsoImPUVGle6TcrZ1b.png)
 
 * 
 这使得一个非常先进的轻客户端协议成为了可能，它允许轻客户端轻松地进行并核实以下类型的查询答案：
@@ -231,7 +231,7 @@ Bitcoin如何查询你当前有多少币？一个比特币轻客户端，可以�
 
 然后，客户端会进行相同的步骤，但会将服务器提供的证明作为一个数据库来使用。如果客户端进行步骤的结果和服务器提供的是一样的话，客户端就接受这个证明。 
 
-![](/img/user/数据结构/assets/boxcnPnidko6fkPnum6JSHjDPVb.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcnPnidko6fkPnum6JSHjDPVb.png)
 
 
 
@@ -243,7 +243,7 @@ Bitcoin如何查询你当前有多少币？一个比特币轻客户端，可以�
 
 但是，对于状态树，情况会更复杂些。以太坊中的状态树基本上包含了一个键值映射，其中的键是地址，而值包括账户的声明、余额、随机数nounce、代码以及每一个账户的存储（其中存储本身就是一颗树）。例如，摩登测试网络（the Morden testnet ）的创始状态如下所示： 
 
-![](/img/user/数据结构/assets/boxcncsaFqTlNNktJ3s0MMnVNhe.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcncsaFqTlNNktJ3s0MMnVNhe.png)
 
 然而，不同于交易历史记录，状态树需要经常地进行更新：账户余额和账户的随机数nonce经常会更变，更重要的是，新的账户会频繁地插入，存储的键（ key）也会经常被插入以及删除。我们需要这样的数据结构，它能在一次插入、更新、删除操作后快速计算到树根，而不需要重新计算整个树的Hash。这种数据结构同样得包括两个非常好的第二特征：
 
