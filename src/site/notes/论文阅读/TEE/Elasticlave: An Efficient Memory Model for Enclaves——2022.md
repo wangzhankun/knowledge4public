@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/论文阅读/TEE/Elasticlave: An Efficient Memory Model for Enclaves——2022/","dgPassFrontmatter":true}
+{"dg-publish":true,"tags":["论文","TEE"],"permalink":"/论文阅读/TEE/Elasticlave: An Efficient Memory Model for Enclaves——2022/","dgPassFrontmatter":true}
 ---
 
 
@@ -71,7 +71,7 @@ If an owner does not explicitly authorize an enclave e to access a region r with
 
 一个ELASTICLAVE内存区域有四种权限：read, write, execute, lock。
 
-![](https://cdn.jsdelivr.net/gh/wangzhankun/img-repo/boxcnOqBeQ1kS84tBnlwuCuhFqh.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcnOqBeQ1kS84tBnlwuCuhFqh.png)
 
 每个区域都可以用在全局命名空间中唯一标识它的通用标识符来寻址，并且可以映射到不同飞地中的不同虚拟地址。
 
