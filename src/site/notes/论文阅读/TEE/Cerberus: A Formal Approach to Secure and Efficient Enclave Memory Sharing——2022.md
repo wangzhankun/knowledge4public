@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/论文阅读/TEE/Cerberus: A Formal Approach to Secure and Efficient Enclave Memory Sharing——2022/","dgPassFrontmatter":true}
+{"dg-publish":true,"tags":["论文","TEE"],"permalink":"/论文阅读/TEE/Cerberus: A Formal Approach to Secure and Efficient Enclave Memory Sharing——2022/","dgPassFrontmatter":true}
 ---
 
 
