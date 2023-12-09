@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/论文阅读/TEE/HyperEnclave: An Open and Cross-platform Trusted Execution Environment——2022/","dgPassFrontmatter":true}
+{"dg-publish":true,"tags":["论文","TEE"],"permalink":"/论文阅读/TEE/HyperEnclave: An Open and Cross-platform Trusted Execution Environment——2022/","dgPassFrontmatter":true}
 ---
 
 
@@ -31,8 +31,7 @@
 |ENCLAVE OPERATION MODE |VMX Mode与特权级 |运行的代码 |
 |---|---|---|
 |Monitor Mode |VMX 根模式 |RustMonitor |
-|Normal Mode |VMX非根模式
-ring0 for primary OSring3 for untrusted part of app |主操作系统和应用程序不受信任的部分 |
+|Normal Mode |VMX非根模式ring0 for primary OSring3 for untrusted part of app |主操作系统和应用程序不受信任的部分 |
 |Secure Mode |VMX根模式的ring3或者ring0，VMX非根模式的ring3 |根据飞地的操作模式选择运行在VMX根模式的ring3或ring0，或者是非根模式的ring3 |
 
 
@@ -49,7 +48,7 @@ ring0 for primary OSring3 for untrusted part of app |主操作系统和应用程
 
 # **方法**
 
-![](/img/user/论文阅读/TEE/assets/boxcnocxM0JwUcImrEPFyBmLi4b.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcnocxM0JwUcImrEPFyBmLi4b.png)
 
 ## 模块
 
@@ -62,7 +61,7 @@ ring0 for primary OSring3 for untrusted part of app |主操作系统和应用程
 |Trusted part of APP |Secure Mode |运行在飞地中 |
 ## 内存管理与隔离
 
-![](/img/user/论文阅读/TEE/assets/boxcnJKMjhPfnTigdyg5UfJCQ9p.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcnJKMjhPfnTigdyg5UfJCQ9p.png)
 
 在SGX中，enclave的内存也是由OS进行管理的，这引入了很多问题。HyperEnclave则是让RustMonitor管理enclave的内存，包括页表的建立以及page fault的处理等。但是，enclave依然与不受信任部分的代码处在同一个内存空间中。然而，这种设计面临着新的挑战：由于enclave可以访问应用程序的整个地址空间，当应用程序的页表映射发生变化时，例如由于页面交换，更新后的映射需要与RustMonitor管理的enclave的页表同步。为了消除同步开销，我们在应用程序的地址空间中预分配了一个marshalling缓冲区，该缓冲区与Enclave共享。marshalling缓冲区的映射在整个Enclave生命周期中是固定的，方法是预先分配物理内存并将其固定在内存中。飞地之间、飞地与应用程序之间交换数据必须通过marshalling buffer。enclave不需要应用程序的内存映射,也不不包含在飞地的页表。
 
@@ -76,7 +75,7 @@ HyperEnclave 强制实施以下安全要求：
 
 ## 可信启动、证明与Sealing
 
-![](/img/user/论文阅读/TEE/assets/boxcn8XlA5AKx19FGTwYxwUWC7e.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcn8XlA5AKx19FGTwYxwUWC7e.png)
 
 
 
@@ -105,7 +104,7 @@ Enclave SDK
 
 ## Enclave Operation Mode
 
-![](/img/user/论文阅读/TEE/assets/RVutbOj6QoHCjWxFnT2c3wltntb.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/RVutbOj6QoHCjWxFnT2c3wltntb.png)
 
 
 
