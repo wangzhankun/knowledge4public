@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/论文阅读/TEE/HECTOR-V: A Heterogeneous CPU Architecture for a Secure RISC-V Execution Environment——2021/","dgPassFrontmatter":true}
+{"dg-publish":true,"tags":["论文","TEE"],"permalink":"/论文阅读/TEE/HECTOR-V: A Heterogeneous CPU Architecture for a Secure RISC-V Execution Environment——2021/","dgPassFrontmatter":true}
 ---
 
 
