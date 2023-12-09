@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/论文阅读/TEE/Application-Processor Trusted Execution Environment (AP-TEE) for Confidential Computing on RISC-V platforms——不是论文/","dgPassFrontmatter":true}
+{"dg-publish":true,"tags":["TEE","论文"],"permalink":"/论文阅读/TEE/Application-Processor Trusted Execution Environment (AP-TEE) for Confidential Computing on RISC-V platforms——不是论文/","dgPassFrontmatter":true}
 ---
 
 
@@ -34,7 +34,7 @@ This specification aims to describe the TEEI and TSM interfaces.
 
 ### VM workloads
 
-![](/img/user/论文阅读/TEE/assets/boxcngVjnfyb5nljHaPJSi6FeIf.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcngVjnfyb5nljHaPJSi6FeIf.png)
 
 TEE地址空间可以由机密区域和非机密区域组成。前者既包括measured pages(包含初始TVM的一部分)，也包括可以在TVM进行运行时访问之后由VMM按需分配的机密zero-pages。非机密TVM定义区域包括用于共享页面和MMIO的区域。
 
@@ -54,7 +54,7 @@ TSM驱动将部分TEE得管理功能交给了TSM，尤其是内存隔离功能�
 
 ### Process workloads
 
-![](/img/user/论文阅读/TEE/assets/boxcnmCx8mggByCgxjB6GI506wt.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcnmCx8mggByCgxjB6GI506wt.png)
 
 ## 结构细节
 
@@ -70,11 +70,11 @@ TEEI实现了内存在机密与非机密之间的转换。
 * AP-TEE标志位为1的hart允许访问机密和非机密内存
 * AP-TEE标志位为0的hart只允许访问非机密内存
 
-![](/img/user/论文阅读/TEE/assets/boxcnjyOvlIs69Yoxyxm72tlH3c.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcnjyOvlIs69Yoxyxm72tlH3c.png)
 
 非机密内存由VMM管理，机密内存由TSM和TSM驱动通过Memory Tracking Table(MTT)进行管理。
 
-![](/img/user/论文阅读/TEE/assets/boxcnlk0Z5BxZcESf1JVln8xi5b.png)
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/boxcnlk0Z5BxZcESf1JVln8xi5b.png)
 
 Two-stage address translation参见[^1]。
 
