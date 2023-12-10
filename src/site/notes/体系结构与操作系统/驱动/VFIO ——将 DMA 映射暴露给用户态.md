@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"date":"2023-12-09","time":"21:42","progress":"进行中","tags":["用户态驱动"],"permalink":"/体系结构与操作系统/驱动/VFIO ——将 DMA 映射暴露给用户态/","dgPassFrontmatter":true}
+{"dg-publish":true,"date":"2023-12-09","time":"21:42","progress":"进行中","tags":["用户态驱动","驱动"],"permalink":"/体系结构与操作系统/驱动/VFIO ——将 DMA 映射暴露给用户态/","dgPassFrontmatter":true}
 ---
 
 # VFIO ——将 DMA 映射暴露给用户态
@@ -95,20 +95,27 @@ modprobe vfio-pci
 
 `lspci -n -s 0000:06:0d.006:0d.0 0401: 1102:0002 (rev 08)`
 
-# echo 0000:06:0d.0 > /sys/bus/pci/devices/0000:06:0d.0/driver/unbind
-# echo 1102 0002 > /sys/bus/pci/drivers/vfio-pci/new_id |
-|---|
-然后寻找其他同属于一个 group 的设备
+```sh
+echo 0000:06:0d.0 > /sys/bus/pci/devices/0000:06:0d.0/driver/unbind
+echo 1102 0002 > /sys/bus/pci/drivers/vfio-pci/new_id
+```
 
-|$ ls -l /sys/bus/pci/devices/0000:06:0d.0/iommu_group/devices
+然后寻找其他同属于一个 group 的设备
+```sh
+ls -l /sys/bus/pci/devices/0000:06:0d.0/iommu_group/devices
+```
+
+```log
 total 0
 lrwxrwxrwx. 1 root root 0 Apr 23 16:13 0000:00:1e.0 ->
         ../../../../devices/pci0000:00/0000:00:1e.0
 lrwxrwxrwx. 1 root root 0 Apr 23 16:13 0000:06:0d.0 ->
         ../../../../devices/pci0000:00/0000:00:1e.0/0000:06:0d.0
 lrwxrwxrwx. 1 root root 0 Apr 23 16:13 0000:06:0d.1 ->
-        ../../../../devices/pci0000:00/0000:00:1e.0/0000:06:0d.1 |
-|---|
+        ../../../../devices/pci0000:00/0000:00:1e.0/0000:06:0d.1
+```
+
+
 PCI 桥 `0000:00:1e.0` 后面挂了两个设备，一个是刚才加进去的 `0000:06:0d.0` ，还有一个是 `0000:06:0d.1` ，通过上面的步奏加进去就可以。
 
 最后一步是让用户有权限使用这个 group。
