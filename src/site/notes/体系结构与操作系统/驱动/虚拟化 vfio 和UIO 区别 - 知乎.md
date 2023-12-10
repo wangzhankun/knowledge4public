@@ -1,10 +1,10 @@
 ---
-{"dg-publish":true,"date":"2023-12-09","time":"21:43","progress":"进行中","tags":["用户态驱动"],"permalink":"/体系结构与操作系统/驱动/虚拟化 vfio 和UIO 区别 - 知乎/","dgPassFrontmatter":true}
+{"dg-publish":true,"date":"2023-12-09","time":"21:43","progress":"进行中","tags":["用户态驱动","驱动"],"permalink":"/体系结构与操作系统/驱动/虚拟化 vfio 和UIO 区别 - 知乎/","dgPassFrontmatter":true}
 ---
 
 # 虚拟化 vfio 和UIO 区别 - 知乎
 
-## **UIO -->IOMMU --> VFIO**
+## UIO -->IOMMU --> VFIO
 
 1、UIO的出现，允许将驱动程序用到用户态空间里实现，但UIO有它的不足之处，如不支持DMA、中断等；
 
@@ -20,7 +20,7 @@
 
 6、SR-IOV是针对PCIE设备的，PCI设备理论上不具有SR-IOV功能；
 
-## **UIO**
+## UIO
 
 ![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/AQwAboue7oN4QXxnT9QcnE6HnQh.png)
 
@@ -36,7 +36,7 @@ UIO的几个特点：
 
 总的来说，UIO框架适用于简单设备的驱动，因为它不支持DMA，不能支持多个中断线，缺乏逻辑设备抽象能力。
 
-## **IOMMU**
+## IOMMU
 
 ![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/ALjxbc3z4oNv2ZxlymZcN4H1nCb.png)
 
@@ -52,7 +52,7 @@ Many platforms contain an extra piece of hardware called an I/O Memory Managemen
 
 大概就是这么回事了，似乎写的有点乱，具体问题看spec。
 
-## **VFIO**
+## VFIO
 
 vfio使用参考kernel/Documentation/vfio.txt
 
@@ -130,7 +130,6 @@ VFIO设备实现层与Linux设备模型紧密相连，当前，VFIO中仅有针�
 
 VFIO是一套用户态驱动框架，可用于编写高效用户态驱动；在虚拟化情景下，亦可用来在用户态实现device passthrough。通过VFIO访问硬件并无新意，VFIO可贵之处在于第一次向用户态开放了IOMMU接口，能完全在用户态配置IOMMU，将DMA地址空间映射进而限制在进程虚拟地址空间之内。这对高性能用户态驱动以及在用户态实现device passthrough意义重大。
 
-【
 
 ### **VFIO**
 
@@ -152,7 +151,7 @@ IOMMU的其他好处：
 
 VFIO由平台无关的接口层与平台相关的实现层组成。接口层将服务抽象为IOCTL命令，规化操作流程，定义通用数据结构，与用户态交互。实现层完成承诺的服务。据此，可在用户态实现支持DMA操作的高性能驱动。在虚拟化场景中，亦可借此完全在用户态实现device passthrough。
 
-】
+
 
 
 
