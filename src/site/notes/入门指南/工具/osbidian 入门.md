@@ -36,10 +36,9 @@ local rest api 与浏览器的osbidian web插件配合使用剪藏网页，同�
 **Capture page snapshot**
 ```
 ---
-dg-publish: "true"
+dg-publish: true
 page-title: {{json page.title}}
 url: {{page.url}}
-date: "{{date}}"
 tags:
 ---
 {{#if page.selectedText}}
@@ -47,7 +46,6 @@ tags:
 {{quote page.selectedText}}
 
 ---
-[**原始文档**]({{page.url}})
 
 {{/if}}{{page.content}}
 ```
@@ -56,14 +54,12 @@ tags:
 **Create new note**
 ```
 ---
-dg-publish: "true"
+dg-publish: true
 page-title: {{json page.title}}
 url: {{page.url}}
-date: "{{date}}"
+tags:
 ---
 {{#if page.selectedText}}
-
-[**原始文档**]({{page.url}})
 
 {{quote page.selectedText}}
 {{/if}}
