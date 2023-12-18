@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"page-title":"GMP 原理与调度 · Go语言中文文档","url":"https://www.topgoer.com/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/GMP%E5%8E%9F%E7%90%86%E4%B8%8E%E8%B0%83%E5%BA%A6.html","date":"2023-12-16 14:14:08","tags":null,"permalink":"/编程语言/go/GMP 原理与调度 · Go语言中文文档/","dgPassFrontmatter":true}
+{"dg-publish":true,"page-title":"GMP 原理与调度 · Go语言中文文档","url":"https://www.topgoer.com/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/GMP%E5%8E%9F%E7%90%86%E4%B8%8E%E8%B0%83%E5%BA%A6.html","date":"2023-12-16","tags":["go/gmp"],"permalink":"/编程语言/go/GMP 原理与调度 · Go语言中文文档/","dgPassFrontmatter":true}
 ---
 
 ## 1. GMP 原理与调度
