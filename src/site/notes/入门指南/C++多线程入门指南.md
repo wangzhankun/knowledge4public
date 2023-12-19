@@ -96,24 +96,27 @@ C++11 引入了 `<thread>` 头文件，其中包含了一组用于多线程编�
 #include <iostream>
 #include <thread>
 
-void threadFunction() {
+void threadFunction()
+{
     // 线程执行的代码
     std::cout << "Thread running..." << std::endl;
 }
 
-void func(int x, const std::string& str) { std::cout << "Value: " << x << ", String: " << str << std::endl; }
+void func(int x, const std::string &str) { std::cout << "Value: " << x << ", String: " << str << std::endl; }
 
-int main() {
+int main()
+{
     std::thread myThread(threadFunction); // 创建一个新线程
-    myThread.join(); // 等待线程执行完毕
+    myThread.join();                      // 等待线程执行完毕
+    int value = 42;
+    std::string message = "Hello, Threads!"; // 使用函数对象
 
-	std::thread t([value, message]() { std::cout << "Value: " << value << ", String: " << message << std::endl; });
-	t.join();
+    std::thread t([value, message]()
+                  { std::cout << "Value: " << value << ", String: " << message << std::endl; });
+    t.join();
 
-	int value = 42; std::string message = "Hello, Threads!"; // 使用函数对象
-	std::thread t1(func, value, message);
+    std::thread t1(func, value, message);
 
-	
     return 0;
 }
 ```
@@ -552,8 +555,8 @@ class Semaphore
 生产者消费者问题描述如下：
 
 - 存在一个共享的缓冲区，可以存储有限数量的产品。
-- 只有一个生产者进程，负责生产产品并将其放入共享缓冲区。
-- 只有一个消费者进程，负责从共享缓冲区中取出产品并进行消费。
+- 有若干个生产者进程，负责生产产品并将其放入共享缓冲区。
+- 有若干个消费者进程，负责从共享缓冲区中取出产品并进行消费。
 - 生产者进程只能在缓冲区有足够的空间时才能生产产品，否则必须等待。
 - 消费者进程只能在缓冲区中有产品时才能进行消费，否则必须等待。
 
@@ -561,122 +564,142 @@ class Semaphore
 
 ```c++
 #include <iostream>
+#include <queue>
 #include <thread>
 #include <mutex>
 #include <condition_variable>
 
-using namespace std;
+std::queue<int> buffer;
+const int maxBufferSize = 10; // 缓冲区大小
+std::mutex mtx;
+std::condition_variable bufferEmpty, bufferFull;
 
-mutex mtx;
-condition_variable cv;
-int buffer = 0;
-const int BUFFER_SIZE = 10;
+void producer()
+{
+    for (int i = 1; i <= 20; ++i)
+    {
+        std::unique_lock<std::mutex> lock(mtx);
+        bufferFull.wait(lock, []
+                        { return buffer.size() < maxBufferSize; }); // 等待直到缓冲区不满
 
-void producer() {
-  while (true) {
-    unique_lock<mutex> lock(mtx);
-    while (buffer == BUFFER_SIZE) {
-      cv.wait(lock);
+        buffer.push(i);
+        std::cout << "Produced: " << i << std::endl;
+
+        lock.unlock();
+        bufferEmpty.notify_one();                                    // 唤醒消费者线程
+        std::this_thread::sleep_for(std::chrono::milliseconds(200)); // 模拟生产过程
     }
-    buffer++;
-    cout << "Producer produced a product." << endl;
-    cv.notify_one();
-  }
 }
 
-void consumer() {
-  while (true) {
-    unique_lock<mutex> lock(mtx);
-    while (buffer == 0) {
-      cv.wait(lock);
+void consumer()
+{
+    for (int i = 1; i <= 20; ++i)
+    {
+        std::unique_lock<std::mutex> lock(mtx);
+        bufferEmpty.wait(lock, []
+                         { return !buffer.empty(); }); // 等待直到缓冲区非空
+
+        int item = buffer.front();
+        buffer.pop();
+        std::cout << "Consumed: " << item << std::endl;
+
+        lock.unlock();
+        bufferFull.notify_one();                                     // 唤醒生产者线程
+        std::this_thread::sleep_for(std::chrono::milliseconds(300)); // 模拟消费过程
     }
-    buffer--;
-    cout << "Consumer consumed a product." << endl;
-    cv.notify_one();
-  }
 }
 
-int main() {
-  thread t1(producer);
-  thread t2(consumer);
+int main()
+{
+    std::thread producerThread(producer);
+    std::thread consumerThread(consumer);
 
-  t1.join();
-  t2.join();
+    producerThread.join();
+    consumerThread.join();
 
-  return 0;
+    return 0;
 }
+
 ```
 
-### 解决方案
+## 哲学家就餐问题
 
-为了解决生产者消费者问题，需要使用同步机制来确保数据的一致性和完整性。一种常用的同步机制是使用信号量。信号量是一种整数值，代表共享资源的数量。生产者进程在生产产品时会递增信号量，消费者进程在消费产品时会递减信号量。当信号量为 0 时，表示共享资源已经用尽，生产者进程必须等待，直到消费者进程消费了产品并释放了资源。
+### 描述
+哲学家就餐问题是一个经典的同步问题，它描述了如下场景：
 
-在 C++ 中，可以使用 `std::condition_variable` 和 `std::mutex` 来实现生产者消费者问题。`std::condition_variable` 可以用来挂起线程，直到某个条件满足，而 `std::mutex` 可以用来保护共享数据。
+设有五位哲学家围坐在一张圆形餐桌旁，做以下两件事情之一：吃饭，或者思考。吃东西的时候，他们就停止思考，思考的时候也停止吃东西。餐桌上有五碗意大利面，每位哲学家之间各有一只餐叉。因为用一只餐叉很难吃到意大利面，所以假设哲学家必须用两只餐叉吃东西。他们只能使用自己左右手边的那两只餐叉。
 
+这个问题不考虑意大利面有多少，也不考虑哲学家的胃有多大。假设两者都是无限大。
+
+问题在于如何设计一套规则，使得在哲学家们在完全不交谈，也就是无法知道其他人可能在什么时候要吃饭或者思考的情况下，可以在这两种状态下永远交替下去。
+
+### 解题思路
+解决这个问题的一种经典方法是使用资源分配策略，例如：
+
+1. **资源层次结构**：为了避免死锁，哲学家必须按照一定的顺序拿起叉子，比如每位哲学家先拿起左边的叉子再拿起右边的叉子。这样就可以防止所有哲学家同时拿起同一侧的叉子而导致死锁。
+    
+2. **同步机制**：使用锁或信号量来控制哲学家对共享资源（叉子）的访问。哲学家在尝试拿起叉子时需要获取锁，成功获取两只叉子后才能进餐，进餐完成后释放叉子并释放锁。
+
+### C++代码样例
+
+#### 错误样例1
 ```c++
+// 错误样例：
 #include <iostream>
 #include <thread>
 #include <mutex>
 #include <condition_variable>
 
-using namespace std;
+const int NUM_PHILOSOPHERS = 5;
 
-mutex mtx;
-condition_variable cv;
-int buffer = 0;
-const int BUFFER_SIZE = 10;
+std::mutex forks[NUM_PHILOSOPHERS];
 
-void producer() {
-  while (true) {
-    unique_lock<mutex> lock(mtx);
-    while (buffer == BUFFER_SIZE) {
-      cv.wait(lock);
+void philosopher(int philosopher_id)
+{
+    while (true)
+    {
+        int left_fork = philosopher_id;
+        int right_fork = (philosopher_id + 1) % NUM_PHILOSOPHERS;
+
+		// 有可能造成死锁, 也有可能饿死某些哲学家
+        std::unique_lock<std::mutex> left_lock(forks[left_fork]);
+        std::unique_lock<std::mutex> right_lock(forks[right_fork]);
+
+        // 模拟哲学家进餐
+        std::cout << "Philosopher " << philosopher_id << " is eating." << std::endl;
+
+        // 释放叉子
+        right_lock.unlock();
+        left_lock.unlock();
+            
+        // 模拟哲学家思考
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
-    buffer++;
-    cout << "Producer produced a product." << endl;
-    cv.notify_one();
-  }
 }
 
-void consumer() {
-  while (true) {
-    unique_lock<mutex> lock(mtx);
-    while (buffer == 0) {
-      cv.wait(lock);
+int main()
+{
+    std::thread philosophers[NUM_PHILOSOPHERS];
+
+    // 创建哲学家线程
+    for (int i = 0; i < NUM_PHILOSOPHERS; ++i)
+    {
+        philosophers[i] = std::thread(philosopher, i);
     }
-    buffer--;
-    cout << "Consumer consumed a product." << endl;
-    cv.notify_one();
-  }
+
+    // 等待所有哲学家线程完成
+    for (int i = 0; i < NUM_PHILOSOPHERS; ++i)
+    {
+        philosophers[i].join();
+    }
+
+    return 0;
 }
 
-int main() {
-  thread t1(producer);
-  thread t2(consumer);
-
-  t1.join();
-  t2.join();
-
-  return 0;
-}
 ```
 
-### 总结
+#### 错误样例2
 
-生产者消费者问题是经典的同步问题，它模拟了生产者生产产品并将其放在共享缓冲区中，而消费者从共享缓冲区中取出产品进行消费的情况。该问题涉及到两个并发进程之间的协作，因此需要使用同步机制来确保数据的一致性和完整性。
-
-
-
-## 哲学家就餐问题
-哲学家就餐问题是一个经典的同步问题，它描述了如下场景：
-
-有 5 位哲学家围坐在一张圆桌旁，每位哲学家前面都有一份意大利面。桌上只有 5 根叉子，每位哲学家都需要两只叉子才能吃意大利面。
-
-哲学家们都是有礼貌的，他们不会在没有叉子的时候吃意大利面。如果一名哲学家拿到了两根叉子，他会开始吃意大利面，直到他吃饱。吃完后，他会把叉子放回桌上。
-
-问题是，哲学家们如何才能确保他们不会饿死呢？
-
-### C++代码样例
 ```c++
 #include <iostream>
 #include <thread>
@@ -688,50 +711,59 @@ using namespace std;
 const int num_philosophers = 5;
 mutex forks[num_philosophers];
 condition_variable cv[num_philosophers];
-bool eating[num_philosophers];
+bool using_forks[num_philosophers];
 
-void philosopher(int id) {
-  while (true) {
-    // 思考
-    cout << "Philosopher " << id << " is thinking." << endl;
+void philosopher(int id)
+{
+    while (true)
+    {
+        // 思考
+        cout << "Philosopher " << id << " is thinking." << endl;
 
-    // 拿起左边叉子
-    unique_lock<mutex> lock_left(forks[id]);
-    cv[id].wait(lock_left, [&] { return !eating[(id + 1) % num_philosophers]; });
-    eating[id] = true;
+        // 仍然有可能出现死锁问题
+        // 仍然会有哲学家饿死的问题
 
-    // 拿起右边叉子
-    unique_lock<mutex> lock_right(forks[(id + 1) % num_philosophers]);
-    eating[(id + 1) % num_philosophers] = true;
+        // 拿起左边叉子
+        unique_lock<mutex> lock_left(forks[id]);
+        cv[id].wait(lock_left, [&]
+                    { return !using_forks[id]; });
+        using_forks[id] = true;
 
-    // 吃面
-    cout << "Philosopher " << id << " is eating." << endl;
-    this_thread::sleep_for(chrono::milliseconds(500));
+        // 拿起右边叉子
+        unique_lock<mutex> lock_right(forks[(id + 1) % num_philosophers]);
+        using_forks[(id + 1) % num_philosophers] = true;
 
-    // 放下右边叉子
-    lock_right.unlock();
-    eating[(id + 1) % num_philosophers] = false;
-    cv[(id + 1) % num_philosophers].notify_one();
+        // 吃面
+        cout << "Philosopher " << id << " is eating." << endl;
+        this_thread::sleep_for(chrono::milliseconds(500));
 
-    // 放下左边叉子
-    lock_left.unlock();
-    eating[id] = false;
-    cv[id].notify_one();
-  }
+        // 放下右边叉子
+        using_forks[(id + 1) % num_philosophers] = false;
+        lock_right.unlock();
+        cv[(id + 1) % num_philosophers].notify_one();
+
+        // 放下左边叉子
+        using_forks[id] = false;
+        lock_left.unlock();
+        cv[id].notify_one();
+    }
 }
 
-int main() {
-  thread philosophers[num_philosophers];
+int main()
+{
+    thread philosophers[num_philosophers];
 
-  for (int i = 0; i < num_philosophers; i++) {
-    philosophers[i] = thread(philosopher, i);
-  }
+    for (int i = 0; i < num_philosophers; i++)
+    {
+        philosophers[i] = thread(philosopher, i);
+    }
 
-  for (int i = 0; i < num_philosophers; i++) {
-    philosophers[i].join();
-  }
+    for (int i = 0; i < num_philosophers; i++)
+    {
+        philosophers[i].join();
+    }
 
-  return 0;
+    return 0;
 }
 ```
 
