@@ -44,6 +44,12 @@ for f in *.tar*; do tar xf $f; done
 
 ## 设置变量
 
+HOST: X86
+TARGET: RISCV64
+
+
+目标：在riscv下，使用x86的编译器编译出能够在x86下运行的可执行文件
+
 
 ```Bash
 # ROOT 是 源码文件的跟路径
