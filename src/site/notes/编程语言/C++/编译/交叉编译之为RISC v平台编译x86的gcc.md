@@ -44,29 +44,25 @@ for f in *.tar*; do tar xf $f; done
 
 ## 设置变量
 
-HOST: X86
-TARGET: RISCV64
+这里一定不能设置成环境变量！！！否则会出错！！！
 
 
-目标：在riscv下，使用x86的编译器编译出能够在x86下运行的可执行文件
-
-
-```Bash
+```sh
 # ROOT 是 源码文件的跟路径
-export ROOT=/root/x86-gcc
-export GCCSRC=$ROOT/gcc-11.1.0
-export BINUTILS=$ROOT/binutils-2.38
-export LINUX=$ROOT/linux-5.10.5
-export GLIBC=$ROOT/glibc-2.33
+ROOT=/root/x86-gcc
+GCCSRC=$ROOT/gcc-11.1.0
+BINUTILS=$ROOT/binutils-2.38
+LINUX=$ROOT/linux-5.10.5
+GLIBC=$ROOT/glibc-2.33
 
-export BUILD=x86_64-linux-gnu
-export HOST=riscv64-unknown-linux-gnu
-export TARGET=x86_64-linux-gnu
-export TARGET_ARCH=x86_64
+BUILD=x86_64-linux-gnu
+HOST=riscv64-unknown-linux-gnu
+TARGET=x86_64-linux-gnu
+TARGET_ARCH=x86_64
 
 # PREFIX 是把交叉编译器安装到哪里
-export PREFIX=/opt/$TARGET
-export SYSROOT=$PREFIX/sysroot
+PREFIX=/opt/$TARGET
+SYSROOT=$PREFIX/sysroot
 ```
 
 
@@ -147,11 +143,13 @@ file cloog # 确认一下软链接是否成功
 
 这里会出现 fenv.h:58:11: error: ‘::fenv_t’ has not been declared，解决方法见[链接](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=80196)的 comment13。这里直接给出解决方案：
 
+1. 把`$GCCSRC/configure`中的`RAW_CXX_FOR_TARGET="$CXX_FOR_TARGET"`改为`RAW_CXX_FOR_TARGET="$CXX_FOR_TARGET -nostdinc++"`
+2. 把`$GCCSRC/configure.ac`中的 `RAW_CXX_FOR_TARGET="$CXX_FOR_TARGET"`改为`RAW_CXX_FOR_TARGET="$CXX_FOR_TARGET -nostdinc++"`
 
-
-
-
-
+```sh
+sed -i 's/RAW_CXX_FOR_TARGET="$CXX_FOR_TARGET"/RAW_CXX_FOR_TARGET="$CXX_FOR_TARGET -nostdinc++"/g' $GCCSRC/configure
+sed -i 's/RAW_CXX_FOR_TARGET="$CXX_FOR_TARGET"/RAW_CXX_FOR_TARGET="$CXX_FOR_TARGET -nostdinc++"/g' $GCCSRC/configure.ac
+```
 
 ```Bash
 rm -rf $GCCSRC/build-${TARGET}
@@ -237,7 +235,95 @@ $PREFIX/bin/x86_64-linux-gnu-gcc -o main main.c
 $PREFIX/bin/x86_64-linux-gnu-g++ -o hello hello.cpp
 ```
 
+## 脚本汇总
 
+```sh
+#!/bin/bash
+
+# ROOT 是 源码文件的跟路径
+ROOT=/root/x86-gcc
+GCCSRC=$ROOT/gcc-11.1.0
+BINUTILS=$ROOT/binutils-2.38
+LINUX=$ROOT/linux-5.10.5
+GLIBC=$ROOT/glibc-2.33
+
+BUILD=x86_64-linux-gnu
+HOST=riscv64-unknown-linux-gnu
+TARGET=x86_64-linux-gnu
+TARGET_ARCH=x86_64
+
+# PREFIX 是把交叉编译器安装到哪里
+PREFIX=/opt/$TARGET
+SYSROOT=$PREFIX/sysroot
+
+
+# 删除已有的路径
+rm -rf $PREFIX
+mkdir -p $SYSROOT
+
+# 编译 binutils
+rm -rf $BINUTILS/build-${TARGET}
+mkdir $BINUTILS/build-${TARGET}
+cd $BINUTILS/build-${TARGET}
+../configure --host=$HOST --target=${TARGET} \
+    --prefix=${PREFIX} --with-sysroot=$SYSROOT \
+    --disable-multilib --disable-werror
+make -j32
+make install
+
+# 安装linux头文件
+cd $LINUX
+make mrproper
+make ARCH=${TARGET_ARCH} INSTALL_HDR_PATH=$SYSROOT/usr headers_install
+
+# 编译 gcc
+## 下载gmp、mpfr、mpc和isl:
+cd $GCCSRC
+./contrib/download_prerequisites
+# gmp-6.1.0.tar.bz2: OK
+# mpfr-3.1.4.tar.bz2: OK
+# mpc-1.0.3.tar.gz: OK
+# isl-0.18.tar.bz2: OK
+# All prerequisites downloaded successfully.
+# 这里的下载可能会出错，一定要认真检查
+
+cd $GCCSRC
+ln -s $ROOT/cloog-0.18.1 cloog
+file cloog # 确认一下软链接是否成功
+
+# 这里会出现 fenv.h:58:11: error: ‘::fenv_t’ has not been declared，解决方法见[链接](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=80196)的 comment13。这里直接给出解决方案：
+sed -i 's/RAW_CXX_FOR_TARGET="$CXX_FOR_TARGET"/RAW_CXX_FOR_TARGET="$CXX_FOR_TARGET -nostdinc++"/g' $GCCSRC/configure
+sed -i 's/RAW_CXX_FOR_TARGET="$CXX_FOR_TARGET"/RAW_CXX_FOR_TARGET="$CXX_FOR_TARGET -nostdinc++"/g' $GCCSRC/configure.ac
+
+rm -rf $GCCSRC/build-${TARGET}
+mkdir $GCCSRC/build-${TARGET}
+cd $GCCSRC/build-${TARGET}
+../configure --host=$HOST   --target=${TARGET} \
+    --prefix=${PREFIX} --with-sysroot=$SYSROOT \
+    --enable-languages=c,c++ \
+    --enable-threads=posix \
+    --disable-multilib --disable-werror --without-selinux --disable-libstdcxx-pch \
+    --disable-libmudflap --disable-libssp --disable-libquadmath \
+    --disable-libsanitizer --disable-nls
+make -j64
+make install
+
+
+rm -rf $GLIBC/build-${TARGET}
+mkdir $GLIBC/build-${TARGET}
+cd $GLIBC/build-${TARGET}
+../configure --build=$BUILD --host=$TARGET --target=${TARGET} \
+    --prefix=$SYSROOT/usr \
+    --with-headers=$SYSROOT/usr/include \
+    --enable-threads=posix \
+    --without-selinux \
+    --disable-multilib libc_cv_forced_unwind=yes --disable-libstdcxx-pch \
+    --disable-libmudflap --disable-libssp --disable-libquadmath \
+    --disable-libsanitizer --disable-nls
+make -j64
+
+make install_root=$SYSROOT install
+```
 
 ## 参考文献
 
