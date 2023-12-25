@@ -8,7 +8,7 @@
 
 # 交叉编译内核
 
-```Assembly
+```sh
 #!/bin/bash
 
 
