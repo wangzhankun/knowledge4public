@@ -624,6 +624,8 @@ int main()
 
 ## 哲学家就餐问题
 
+[维基百科](https://zh.wikipedia.org/wiki/%E5%93%B2%E5%AD%A6%E5%AE%B6%E5%B0%B1%E9%A4%90%E9%97%AE%E9%A2%98)
+[leetcode](https://leetcode.cn/problems/the-dining-philosophers/description/)
 ### 描述
 哲学家就餐问题是一个经典的同步问题，它描述了如下场景：
 
@@ -634,11 +636,281 @@ int main()
 问题在于如何设计一套规则，使得在哲学家们在完全不交谈，也就是无法知道其他人可能在什么时候要吃饭或者思考的情况下，可以在这两种状态下永远交替下去。
 
 ### 解题思路
-解决这个问题的一种经典方法是使用资源分配策略，例如：
 
-1. **资源层次结构**：为了避免死锁，哲学家必须按照一定的顺序拿起叉子，比如每位哲学家先拿起左边的叉子再拿起右边的叉子。这样就可以防止所有哲学家同时拿起同一侧的叉子而导致死锁。
-    
-2. **同步机制**：使用锁或信号量来控制哲学家对共享资源（叉子）的访问。哲学家在尝试拿起叉子时需要获取锁，成功获取两只叉子后才能进餐，进餐完成后释放叉子并释放锁。
+#### 服务生解法
+
+一个简单的解法是引入一个餐厅服务生，哲学家必须经过他的允许才能拿起餐叉。因为服务生知道哪只餐叉正在使用，所以他能够作出判断避免死锁。
+
+为了演示这种解法，假设哲学家依次标号为A至E。如果A和C在吃东西，则有四只餐叉在使用中。B坐在A和C之间，所以两只餐叉都无法使用，而D和E之间有一只空余的餐叉。假设这时D想要吃东西。如果他拿起了第五只餐叉，就有可能发生死锁。相反，如果他征求服务生同意，服务生会让他等待。这样，我们就能保证下次当两把餐叉空余出来时，一定有一位哲学家可以成功的得到一对餐叉，从而避免了死锁。
+```c++
+#include <atomic>
+#include <functional>
+#include <condition_variable>
+
+using namespace std;
+
+class Waiter
+{
+private:
+    std::mutex mtx;
+    std::condition_variable m_cv;
+    bool forks[5] = {false, false, false, false, false};
+
+public:
+    Waiter(/* args */) {}
+
+    ~Waiter() {}
+
+    void request(int philosopher)
+    {
+        unique_lock<mutex> lock(mtx);
+
+        auto func = [this, philosopher]()
+        {
+            return forks[philosopher] == false && forks[(philosopher + 1) % 5] == false;
+        };
+
+        m_cv.wait(lock, func);
+
+        forks[philosopher] = true;
+        forks[(philosopher + 1) % 5] = true;
+    }
+
+    void release(int philosopher)
+    {
+        {
+            unique_lock<mutex> lock(mtx);
+            forks[philosopher] = false;
+            forks[(philosopher + 1) % 5] = false;
+        }
+        m_cv.notify_all();
+    }
+};
+
+class DiningPhilosophers
+{
+    Waiter t;
+
+public:
+    DiningPhilosophers() : t()
+    {
+    }
+
+    void wantsToEat(int philosopher,
+                    function<void()> pickLeftFork,
+                    function<void()> pickRightFork,
+                    function<void()> eat,
+                    function<void()> putLeftFork,
+                    function<void()> putRightFork)
+    {
+        t.request(philosopher);
+        pickLeftFork();
+        pickRightFork();
+        eat();
+        putLeftFork();
+        putRightFork();
+        t.release(philosopher);
+    }
+};
+
+
+```
+#### 资源分级解法
+
+另一个简单的解法是为资源（这里是餐叉）分配一个[偏序](https://zh.wikipedia.org/wiki/%E5%81%8F%E5%BA%8F "偏序")或者分级的关系，并约定所有资源都按照这种顺序获取，按相反顺序释放，而且保证不会有两个无关资源同时被同一项工作所需要。在哲学家就餐问题中，资源（餐叉）按照某种规则编号为1至5，每一个工作单元（哲学家）总是先拿起左右两边编号较低的餐叉，再拿编号较高的。用完餐叉后，他总是先放下编号较高的餐叉，再放下编号较低的。在这种情况下，当四位哲学家同时拿起他们手边编号较低的餐叉时，只有编号最高的餐叉留在桌上，从而第五位哲学家就不能使用任何一只餐叉了。而且，只有一位哲学家能使用最高编号的餐叉，所以他能使用两只餐叉用餐。当他吃完后，他会先放下编号最高的餐叉，再放下编号较低的餐叉，从而让另一位哲学家拿起后边的这只开始吃东西。
+
+尽管资源分级能避免死锁，但这种策略并不总是实用的，特别是当所需资源的列表并不是事先知道的时候。例如，假设一个工作单元拿着资源3和5，并决定需要资源2，则必须先要释放5，之后释放3，才能得到2，之后必须重新按顺序获取3和5。对需要访问大量数据库记录的计算机程序来说，如果需要先释放高编号的记录才能访问新的记录，那么运行效率就不会高，因此这种方法在这里并不实用。
+
+**本质上还是破坏循坏依赖，实际上不需要对数字进行分级，如果仅仅是解决哲学家问题的话，只需要让某个人的拿起叉子的顺序与其他所有人都不一样即可。**
+```c++
+#include <atomic>
+#include <functional>
+
+using namespace std;
+
+class DiningPhilosophers
+{
+    std::mutex m[5];
+
+public:
+    DiningPhilosophers()
+    {
+    }
+
+    void wantsToEat(int philosopher,
+                    function<void()> pickLeftFork,
+                    function<void()> pickRightFork,
+                    function<void()> eat,
+                    function<void()> putLeftFork,
+                    function<void()> putRightFork)
+    {
+        int lhs = philosopher;
+        int rhs = (philosopher + 1) % 5;
+        if(lhs > rhs) {
+            swap(lhs, rhs);
+        }
+
+        m[lhs].lock();
+        m[rhs].lock();
+
+        if(rhs == lhs + 1)
+        {
+            pickLeftFork();
+            pickRightFork();
+
+            eat();
+            
+            putRightFork();
+            putLeftFork();
+        }
+        else
+        {
+            pickRightFork();
+            pickLeftFork();
+
+            eat();
+
+            putLeftFork();
+            putRightFork();
+        }
+
+        m[rhs].unlock();
+        m[lhs].unlock();
+    }
+};
+```
+
+#### 奇偶解法
+```c++
+#include <atomic>
+#include <functional>
+
+using namespace std;
+
+class DiningPhilosophers
+{
+    std::mutex m[5];
+
+public:
+    DiningPhilosophers()
+    {
+    }
+
+    void wantsToEat(int philosopher,
+                    function<void()> pickLeftFork,
+                    function<void()> pickRightFork,
+                    function<void()> eat,
+                    function<void()> putLeftFork,
+                    function<void()> putRightFork)
+    {
+
+        if (philosopher % 2 == 0)
+        {
+            m[philosopher].lock();
+            m[(philosopher + 1) % 5].lock();
+            pickLeftFork();
+            pickRightFork();
+        }
+        else
+        {
+            m[(philosopher + 1) % 5].lock();
+            m[philosopher].lock();
+
+            pickRightFork();
+            pickLeftFork();
+        }
+
+        eat();
+
+        if (philosopher % 2 == 0)
+        {
+            putRightFork();
+            putLeftFork();
+            m[(philosopher + 1) % 5].unlock();
+            m[philosopher].unlock();
+        }
+        else
+        {
+            putLeftFork();
+            putRightFork();
+            m[philosopher].unlock();
+            m[(philosopher + 1) % 5].unlock();
+        }
+    }
+};
+```
+
+#### 减少同时抢占数量
+最多允许有四个哲学家线程去抢叉子。
+有公平调度的问题。
+```c++
+#include <atomic>
+#include <functional>
+#include <condition_variable>
+
+using namespace std;
+
+class DiningPhilosophers
+{
+    std::mutex m[5];
+    int count;
+    std::condition_variable cv;
+    std::mutex cv_mtx;
+
+public:
+    DiningPhilosophers() : count(4)
+    {
+    }
+
+    void wantsToEat(int philosopher,
+                    function<void()> pickLeftFork,
+                    function<void()> pickRightFork,
+                    function<void()> eat,
+                    function<void()> putLeftFork,
+                    function<void()> putRightFork)
+    {
+        int left = philosopher;
+        int right = (philosopher + 1) % 5;
+        {
+            std::unique_lock<std::mutex> lk(cv_mtx);
+            cv.wait(lk, [this]
+                    { return count > 0; });
+            count--;
+        }
+
+        m[left].lock();
+        m[right].lock();
+        pickLeftFork();
+        pickRightFork();
+        eat();
+        putLeftFork();
+        putRightFork();
+        m[left].unlock();
+        m[right].unlock();
+
+        {
+            std::unique_lock<std::mutex> lk(cv_mtx);
+            count++;
+        }
+        cv.notify_one();
+    }
+};
+```
+
+
+#### 钱迪/米斯拉解法
+
+
+[[分布式系统/哲学家问题-钱迪-米斯拉解法\|哲学家问题-钱迪-米斯拉解法]]
+
+1984年，[曼尼·钱迪](https://zh.wikipedia.org/w/index.php?title=%E6%9B%BC%E5%B0%BC%C2%B7%E9%92%B1%E8%BF%AA&action=edit&redlink=1)和[贾亚达夫·米斯拉](https://zh.wikipedia.org/w/index.php?title=%E8%B4%BE%E4%BA%9A%E8%BE%BE%E5%A4%AB%C2%B7%E7%B1%B3%E6%96%AF%E6%8B%89&action=edit&redlink=1)提出了哲学家就餐问题的另一个解法，允许任意的用户（编号$P_1, P_2, ..., P_n$）争用任意数量的资源。与资源分级解法不同的是，这里编号可以是任意的。
+
+- 对每一对竞争一个资源的哲学家，新拿一个餐叉，给编号较低的哲学家。每只餐叉都是“干净的”或者“脏的”。最初，所有的餐叉都是脏的。
+- 当一位哲学家要使用资源（也就是要吃东西）时，他必须从与他竞争的邻居那里得到。对每只他当前没有的餐叉，他都发送一个请求。
+- 当拥有餐叉的哲学家收到请求时，如果餐叉是干净的，那么他继续留着，否则就擦干净并交出餐叉。
+- 当某个哲学家吃东西后，他的餐叉就变脏了。如果另一个哲学家之前请求过其中的餐叉，那他就擦干净并交出餐叉。
+
+
 
 ### C++代码样例
 
@@ -1355,6 +1627,8 @@ private:
 ```
 
 ## 内存屏障
+- [Memory Barriers: a Hardware View for Software Hackers]
+-  riscv体系结构: 编程与实践
 
 ### 内存屏障的概念和类型
 
@@ -1515,6 +1789,9 @@ int main() {
 
 ```
 
+## 公平调度问题
+
+
 ## 解决多线程问题的方法
 
 * 使用锁来保护共享数据。
@@ -1534,6 +1811,11 @@ int main() {
 
 # C++多线程最佳实践
 
+## 经验总结
+
+多线程编程是一个极其复杂的技术，这是分布式系统/并发编程技术的基础。如何设计、实现多线程是个很吃经验的工作。在这里，我浅薄地谈一下多线程编程经验。
+
+
 - **避免常见的错误**
 - **编写可移植的多线程代码**
 - **编写可伸缩的多线程代码**
@@ -1541,4 +1823,5 @@ int main() {
 
 # 参考资料
 - c++ councurrency in action
-- riscv体系结构编程
+- riscv体系结构: 编程与实践
+- [A complete guide to Linux process schedulin](https://trepo.tuni.fi/bitstream/handle/10024/96864/GRADU-1428493916.pdf)
