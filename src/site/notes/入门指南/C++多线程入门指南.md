@@ -901,7 +901,7 @@ public:
 #### 钱迪/米斯拉解法
 
 
-[[分布式系统/哲学家问题-钱迪-米斯拉解法\|哲学家问题-钱迪-米斯拉解法]]
+[[分布式系统/饮酒哲学家问题-钱迪-米斯拉解法\|饮酒哲学家问题-钱迪-米斯拉解法]]
 
 1984年，[曼尼·钱迪](https://zh.wikipedia.org/w/index.php?title=%E6%9B%BC%E5%B0%BC%C2%B7%E9%92%B1%E8%BF%AA&action=edit&redlink=1)和[贾亚达夫·米斯拉](https://zh.wikipedia.org/w/index.php?title=%E8%B4%BE%E4%BA%9A%E8%BE%BE%E5%A4%AB%C2%B7%E7%B1%B3%E6%96%AF%E6%8B%89&action=edit&redlink=1)提出了哲学家就餐问题的另一个解法，允许任意的用户（编号$P_1, P_2, ..., P_n$）争用任意数量的资源。与资源分级解法不同的是，这里编号可以是任意的。
 
