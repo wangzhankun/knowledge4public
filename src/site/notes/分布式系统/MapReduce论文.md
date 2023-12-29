@@ -105,4 +105,6 @@ master 定期 ping 每个 worker。如果在一定时间内没有从 worker 收�
 |名称|链接|说明|
 |---|---|---|
 |MIT分布式系统课程|https://pdos.csail.mit.edu/6.824/labs/lab-mr.html|要求实现一个MapReduce|
+|MIT课程的源码实现|https://github.com/wangzhankun/mit-6.824-distributed-system/releases/tag/mapreduce-complete||
+
 
