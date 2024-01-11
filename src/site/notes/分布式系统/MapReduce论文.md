@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"date":"2023-12-28","time":"15:27","progress":"进行中","tags":["论文","分布式系统"],"permalink":"/分布式系统/MapReduce论文/","dgPassFrontmatter":true}
+{"dg-publish":true,"date":"2023-12-28","time":"15:27","progress":"完成","tags":["论文","分布式系统"],"permalink":"/分布式系统/MapReduce论文/","dgPassFrontmatter":true}
 ---
 
 
