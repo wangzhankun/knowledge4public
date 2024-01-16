@@ -15,6 +15,7 @@
 
 ## 入门指南
 * [cs自学指南](https://csdiy.wiki/)
+- [[课程/MIT DistributedSystem/MIT DistributedSystem入门指南\|MIT DistributedSystem入门指南]]
 - [[入门指南/编译入门指南\|编译入门指南]]
 - [[入门指南/数据库入门指南\|数据库入门指南]]
 - [[入门指南/操作系统入门\|操作系统入门]]
