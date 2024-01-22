@@ -2,7 +2,8 @@
 {"dg-publish":true,"date":"2024-01-12","time":"19:18","progress":"进行中","tags":["论文"],"url":"https://zhuanlan.zhihu.com/p/630487962","permalink":"/分布式系统/The Design of a Practical System for Fault-Tolerant Virtual Machines 中英文对照/","dgPassFrontmatter":true}
 ---
 
-
+转载自：https://zhuanlan.zhihu.com/p/630487962
+但是本文的翻译使用AI进行了全文重新翻译，英文源自上文链接。
 # The Design of a Practical System for Fault-Tolerant Virtual Machines 中英文对照
 
 ## ABSTRACT
