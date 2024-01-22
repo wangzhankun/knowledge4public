@@ -20,6 +20,8 @@
 ## 声明
 
 本文为本人原创，未经授权严禁转载。如需转载需要在文章最前面注明本文原始链接。
+主要学习资料：[解读共识算法Raft](https://www.bilibili.com/video/BV1pr4y1b7H5/?spm_id_from=333.337.search-card.all.click&vd_source=47bbcc428387a807dfb9a0a62d6b09d1 )
+
 
 ## 摘要
 
@@ -180,11 +182,97 @@ Raft通过比较两份日志中最后一条日志条目的索引值和任期号�
 	- 广播时间(broadcastTime)<<选举超时时间(electionTimeout)<<平均故障时间(MTBF)
 	- 广播时间和平均故障时间是由系统决定的，但是选举超时时间是我们自己选择的。Raft的 RPC需要接受并将信息落盘，所以广播时间大约是0.5ms到20ms,取决于存储的技术。因此，选举超时时间可能需要在10ms到500ms之间。大多数服务器的平均故障间隔时间都在几个月甚至更长。
 
-## 实验
+## 集群成员变更
 
-## 结论
+事实上论文对这里的讨论是很复杂的，详情可见 https://www.bilibili.com/video/BV11u411y7q9/?spm_id_from=333.788&vd_source=47bbcc428387a807dfb9a0a62d6b09d1
 
-## 未来与展望
+
+在需要改变集群配置的时候（如增减节点、替换宕机的机器或者改变复制的程度），Raft可以进行配置变更自动化。自动化配置变更机制最大的难点是保证转换过程中不会出现同一任期的两个leader, 因为转换期间整个集群可能划分为两个独立的大多数（新配置和旧配置）。
+
+配置采用了两阶段的方法：集群先切换到一个过渡的配置，称之为联合一致(joint consensus)。
+
+第一阶段，leader发起$C{old,new}$,使整个集群进入联合一致状态。这时，所有RPC都要在新旧两个配置中都达到大多数才算成功。
+第二阶段，leader2发起$C_{new}$,使整个集群进入新配置状态。这时，所有RPC只要在新配置下能达到大多数就算成功。
+
+只要节点收到了集群配置变更日志并将其加到了自己的日志中，那么该配置不必等待集群提交就可以直接使用了。但是这并不代表集群提交失效，只是配置应用本身不会等日志提交之后才会执行。也就是说，即使集群配置变更日志没有被集群提交，节点也可能已经使用了新的配置。
+
+在集群配置变更过程中，leader可能随时崩溃，会有以下几种情况：
+1. 在$C{old,new}$未提交时宕机
+2. 在$C{old,new}$已提交，但$C_{new}$未发起时宕机
+3. 在$C{old,new}$已提交，$C_{new}$已发起但未提交时宕机
+
+![image.png](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/20240116165458.png)
+
+
+## 总结
+主要参考自 https://www.bilibili.com/video/BV1q5411R74n/?spm_id_from=333.788&vd_source=47bbcc428387a807dfb9a0a62d6b09d1
+
+### 深入理解复制状态机
+
+![image.png](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/20240116205319.png)
+![image.png](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/20240116205406.png)
+![image.png](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/20240116205752.png)
+
+### 共识算法的三个主要特性
+![image.png](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/20240116205857.png)
+
+
+![image.png](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/20240116210107.png)
+
+长生命周期的leader是raft实现简单，并区别于其他共识算法的最关键点。
+
+### no-op补丁
+![image.png](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/20240116210400.png)
+### 集群成员变更拓展
+
+联合一致集群成员变更方法比较复杂，不契合raft的易理解性。在Diego Ongaro的博士论文，和后续的大部分对raft实现中，都使用的是另一种更简单的单节点并更方法，**即一次只增减一个节点，称为单节点集群成员变更方法**。**每次只增减一个节点，相比于多节点变更，最大的差异是新旧配置集群的大多数，是一定会有重合的**。
+
+#### 新增节点
+当新增一个节点时，首先要对新节点与leader进行日志同步。由于在同步过程中，leader依然在不断接受新日志，因此新增节点需要经过多轮同步。例如，同步十轮之后，我们就可以认为新增节点与集群中的follower节点基本一致了。
+
+此时，leader产生并发送$C_{new}$，当leader产生了$C_{new}$之后就开始使用新配置了，只有当集群中的过半节点都接受到了新配置之后，才会对新配置进行提交。（此时只有leader有新配置，加入它宕机了，剩余的节点依然使用旧配置，他们会选举出新的leader,因此不会破坏可用性）。
+
+当过半节点都接收了新配置之后，新配置日志会被提交，但节点集群就变更完成。
+![image.png](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/20240116211457.png)
+
+![image.png](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/20240116211633.png)
+![image.png](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/20240116212301.png)
+
+对于问题3：在图1是尝试新增节点S5，但是此时leader S3宕机，然后从s1,s2,s4中选举出了新leader,此时新增节点s6,新leader S1会应用配置$C_{new2}$，此时集群中只有S1S2S3S4S6五个节点。也就是S5没有成功添加进去。假设此时S1宕机，状态来到图4, S3由于是$C_{new_{1}}$的配置，它只需要得到S3、S4、S5三张选票即可当选leader。如果S3继续完成对$C_{new_{1}}$的配置（S3不知道S6已经加入了集群），那么就会最终导致S6没有被新加进来。
+解决方法是：新leader必须提交一条自己任期内的no-op日志，才能开始单节点集群成员变更。
+
+### RAFT日志压缩
+
+本质上，是通过快照技术对当前的状态机的状态进行保存，然后把快照之前的日志删除即可。
+
+**最新状态=快照+快照之后的日志**、
+
+### 只读操作处理
+
+只读操作要满足强一致性：读到的结果必须是已经提交了的结果。直接从leader上读可能不满足。例如：在leader和其他节点发生了网络分区情况下，其他节点可能已经重新选出了一个leader,而如果老leader在没有访问其他节点的情况下直接拿自身的值返回客户端，这个读取的结果就有可能不是最新的。
+![image.png](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/20240116213738.png)
+![image.png](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/20240116213859.png)
+优化过后的线性一致性读，也至少需要一轮RPC(leader确认的心跳)。并不比写操作快多少(写操作最少也就一轮RPC)
+如果对读不要求强一致性，那么：
+![image.png](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/20240116214049.png)
+
+### 性能
+
+![image.png](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/20240116214310.png)
+
+
+## ParallelRaft
+
+ParallelRaft是阿里云原生数据库PolarDB的底层文件PolarFS对Raft的一种优化的实现。
+PolarFS:An Ultra-low Latency and Failure Resilient Distributed File System for Shared
+Storage Cloud Database /VLDB 2018
+
+### 问题
+raft不允许日志空洞：日志只允许以固定的顺序串行复制、提交。
+这就导致实际场景中大多数是并发场景，多个连接并发的向follower发送日志，只要一个连接有问题，就会导致整个日志乱掉，follower就会拒绝掉没有前序日志的日志，造成大量失败。
+
+![image.png](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/20240116215155.png)
+
 
 ## 强相关文献
 
