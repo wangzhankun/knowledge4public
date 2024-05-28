@@ -1115,7 +1115,7 @@ eyrie_boot(uintptr_t dummy, // $a0 contains the return value from the SBI
 
 该函数的作用是保存当前上下文并根据陷阱或异常的类型进行相应的处理。它首先将当前栈指针(sp)存储到sscratch寄存器中，并将新的栈指针值设为sp，然后检查之前的栈指针是否为零。如果不为零，则说明该陷阱或异常是来自内核态，需要恢复栈指针的值。接着，它保存了所有寄存器的值（除了栈指针），包括 sepc、sstatus、sbadaddr (根据最新的RISC v规范，sbadaddr已经更名为stval)和 scause 寄存器的值。然后，它根据scause中的值，判断是处理中断还是异常。如果scause的值小于零(这种判断是中断还是异常的方法是个很巧妙地实现，后文会解释)，则表示该陷阱是由于一个异常引起的，函数将寻找一个叫做`rt_trap_table`的表，并根据这个表查找需要处理这个异常的处理函数，并通过JALR指令调用找到的函数。如果scause的值大于等于零，则表示该陷阱是由于一个中断引起的，函数将清除 MSB 位并跳转到称为`handle_interrupts`的函数。在处理完陷阱或异常之后，restore user stack恢复了之前保存的栈指针值，并且还将SSCRATCH寄存器的值设置为先前保存的栈指针，最后恢复所有寄存器的值（除了栈指针），并将栈指针重置为之前的值，用sret指令返回。
 
-```Assembly
+```asm
 encl_trap_handler:
   .global encl_trap_handler
 
