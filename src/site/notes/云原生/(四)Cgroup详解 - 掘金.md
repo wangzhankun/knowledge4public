@@ -74,7 +74,7 @@ Subsystems, Hierarchies,Control Group和Tasks之间有许多的规则，下面�
 
 如下图将`cpu`和`memory` subsystems(或者任意多个subsystems)附加到同一个hierarchy。
 
-![cgroup](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d0c25961c59f452082053efe675a599b~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
+![cgroup](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/202403011233773.webp)
 
 #### 规则2
 
@@ -82,7 +82,7 @@ Subsystems, Hierarchies,Control Group和Tasks之间有许多的规则，下面�
 
 如下图`cpu` subsystem已经附加到了`hierarchy A`,并且`memory` subsystem已经附加到了`hierarchy B`。因此`cpu` subsystem不能在附加到`hierarchy B`。
 
-\[![cgroups](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/684593f0f3fa40658545d61be2e7221b~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
+![cgroups](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/202403011233774.webp)
 
 #### 规则3
 
@@ -90,7 +90,7 @@ Subsystems, Hierarchies,Control Group和Tasks之间有许多的规则，下面�
 
 如下图,`cpu`和`memory` subsystem被附加到`cpu_mem_cg`的hierarchy。而`net_cls` subsystem被附加到`net_cls` hierarchy。并且httpd进程被同时加到了`cpu_mem_cg` hierarchy的`cg1` cgroup中和`net` hierarchy的`cg3` cgroup中。并通过两个hierarchy的subsystem分别对httpd进程进行cpu,memory及网络带宽的限制。
 
-\[![cgroups](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b9375be9eb6c45bba01ec1cde3fd9f78~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
+![cgroups](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/202403011233775.webp)
 
 #### 规则4
 
@@ -98,7 +98,7 @@ Subsystems, Hierarchies,Control Group和Tasks之间有许多的规则，下面�
 
 如下图,httpd进程在`cpu_and_mem` hierarchy的`/cg1` cgroup中并把PID 4537写到该cgroup的tasks中。之后httpd(PID=4537)进程fork一个子进程httpd(PID=4840)与其父进程在同一个hierarchy的统一个cgroup中，但是由于父task和子task之间的关系独立不依赖的，所以子task可以移到其它的cgroup中。
 
-\[![cgroups](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/68437dbcdeb94a6ba40d129bd8feca14~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
+![cgroups](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/202403011233776.webp)
 
 ## 使用 cgroups
 
