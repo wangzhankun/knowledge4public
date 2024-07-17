@@ -16,21 +16,22 @@
 ## 入门指南
 * [cs自学指南](https://csdiy.wiki/)
 - [[课程/MIT DistributedSystem/MIT DistributedSystem入门指南\|MIT DistributedSystem入门指南]]
-- [[入门指南/数据库入门指南\|数据库入门指南]]
-- [[入门指南/Keystone TEE入门指南\|Keystone TEE入门指南]]
 - [[入门指南/编译入门指南\|编译入门指南]]
+- [[入门指南/数据库入门指南\|数据库入门指南]]
 - [[入门指南/操作系统入门\|操作系统入门]]
 - [[入门指南/工具/一般软件学习\|一般软件学习]]
 - [[入门指南/工具/xv6-riscv内核入门\|xv6-riscv内核入门]]
 - [[入门指南/工具/picgo\|picgo]]
 - [[入门指南/工具/osbidian 入门\|osbidian 入门]]
 - [[入门指南/工具/QEMU 入门\|QEMU 入门]]
-- [[入门指南/交叉编译入门指南\|交叉编译入门指南]]
 - [[入门指南/cpp协程入门指南\|cpp协程入门指南]]
+- [[入门指南/交叉编译入门指南\|交叉编译入门指南]]
 - [[入门指南/RISC-V体系结构入门\|RISC-V体系结构入门]]
+- [[入门指南/Keystone TEE入门指南\|Keystone TEE入门指南]]
 - [[入门指南/CMU-15445速通入门\|CMU-15445速通入门]]
 - [[云原生/k8s入门指南\|k8s入门指南]]
 - [[入门指南/C++多线程入门指南\|C++多线程入门指南]]
+- [[BrowserClip/go语言学习入门指南\|go语言学习入门指南]]
 
 { .block-language-dataview}
 

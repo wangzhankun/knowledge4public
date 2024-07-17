@@ -41,11 +41,15 @@ page-title: {{json page.title}}
 url: {{page.url}}
 tags:
 ---
+转载自：[原始链接]({{page.url}})，如有侵权，联系删除。
+
+
 {{#if page.selectedText}}
 
 {{quote page.selectedText}}
 
 ---
+
 
 {{/if}}{{page.content}}
 ```

@@ -11,22 +11,37 @@
 本文为本人原创，未经授权严禁转载。如需转载需要在文章最前面注明本文原始链接。
 
 ## 文件列表
-- [[云原生/容器技术-Overlay 文件系统浅析 - 掘金\|容器技术-Overlay 文件系统浅析 - 掘金]]
-- [[云原生/【后台技术】Docker网络篇 - 知乎\|【后台技术】Docker网络篇 - 知乎]]
+- [[云原生/容器技术/容器技术-Overlay 文件系统浅析 - 掘金\|容器技术-Overlay 文件系统浅析 - 掘金]]
+- [[云原生/容器技术/【后台技术】Docker网络篇 - 知乎\|【后台技术】Docker网络篇 - 知乎]]
+- [[云原生/容器技术/cgroups-linux-kernel-documentation笔记\|cgroups-linux-kernel-documentation笔记]]
+- [[云原生/容器技术/cgroups-linux-kernel-documentation\|cgroups-linux-kernel-documentation]]
+- [[云原生/容器技术/Docker深入浅出系列  容器数据持久化 - EvanLeung - 博客园\|Docker深入浅出系列  容器数据持久化 - EvanLeung - 博客园]]
+- [[云原生/容器技术/Dockerfile ENTRYPOINT和CMD的区别 - 知乎\|Dockerfile ENTRYPOINT和CMD的区别 - 知乎]]
+- [[云原生/容器技术/Docker 基础技术之 Linux namespace 详解\|Docker 基础技术之 Linux namespace 详解]]
+- [[云原生/容器技术/Docker 基础技术之 Linux namespace 源码分析\|Docker 基础技术之 Linux namespace 源码分析]]
+- [[云原生/容器技术/Docker Compose vs. Dockerfile with Code Examples \|Docker Compose vs. Dockerfile with Code Examples ]]
 - [[云原生/k8s入门指南\|k8s入门指南]]
-- [[云原生/Docker深入浅出系列  容器数据持久化 - EvanLeung - 博客园\|Docker深入浅出系列  容器数据持久化 - EvanLeung - 博客园]]
-- [[云原生/Dockerfile ENTRYPOINT和CMD的区别 - 知乎\|Dockerfile ENTRYPOINT和CMD的区别 - 知乎]]
-- [[云原生/Docker 基础技术之 Linux namespace 详解\|Docker 基础技术之 Linux namespace 详解]]
-- [[云原生/Docker 基础技术之 Linux namespace 源码分析\|Docker 基础技术之 Linux namespace 源码分析]]
-- [[云原生/Docker Compose vs. Dockerfile with Code Examples \|Docker Compose vs. Dockerfile with Code Examples ]]
-- [[云原生/【后台技术】Docker基础篇 - 知乎\|【后台技术】Docker基础篇 - 知乎]]
-- [[云原生/(四)Cgroup详解 - 掘金\|(四)Cgroup详解 - 掘金]]
+- [[云原生/k8s/kubelet\|kubelet]]
+- [[云原生/k8s/kube-scheduler\|kube-scheduler]]
+- [[云原生/k8s/监控  Kubernetes指南\|监控  Kubernetes指南]]
+- [[云原生/k8s/k8s workload\|k8s workload]]
+- [[云原生/k8s/cni\|cni]]
+- [[云原生/k8s/k8s pod 网络\|k8s pod 网络]]
+- [[云原生/k8s/k8s metric-server\|k8s metric-server]]
+- [[云原生/k8s/k8s flannel\|k8s flannel]]
+- [[云原生/k8s/k8s etcd\|k8s etcd]]
+- [[云原生/k8s/k8s apiserver\|k8s apiserver]]
+- [[云原生/Volume -- K8S\|Volume -- K8S]]
+- [[云原生/容器技术/【后台技术】Docker基础篇 - 知乎\|【后台技术】Docker基础篇 - 知乎]]
+- [[云原生/容器技术/(四)Cgroup详解 - 掘金\|(四)Cgroup详解 - 掘金]]
+- [[云原生/k8s/kcm kube-controller-manager\|kcm kube-controller-manager]]
 
 { .block-language-dataview}
 
 ## 参考文献
 - [Kubernetes入门90分钟精讲(合集)—可能是B站最简单的K8S教程](https://www.bilibili.com/video/BV1k24y197KC/?p=3&spm_id_from=pageDriver&vd_source=47bbcc428387a807dfb9a0a62d6b09d1)
 - [Kubernetes二小时入门教程](https://www.yuque.com/wukong-zorrm/qdoy5p)
+- 《kubernetes权威指南》
 
 
 
@@ -69,17 +84,18 @@ Kubernetes（常简称为K8s）是一个开源的容器编排平台，用于自�
     
 3. Service（服务）：为一组Pod提供稳定的网络访问地址和负载均衡。Service可以根据标签选择器自动路由流量到后端的Pod。
     
-4. Namespace（命名空间）：用于对Kubernetes资源进行逻辑隔离和分组。不同的命名空间可以用于不同环境（如开发、测试、生产）或不同的项目。
+4. Namespace（命名空间）：用于对Kubernetes资源进行逻辑隔离和分组。不同的命名空间可以用于不同环境（如开发、测试、生产）或不同的项目，注意这里的namespace是k8s级别的概念，不是linux内核中的namespace。
     
 5. Ingress（入口）：配置外部流量的访问规则，将外部请求路由到集群内部的Service。
     
 6. ConfigMap（配置映射）和Secret（密钥）：用于将应用程序的配置和敏感信息以键值对的形式存储，并注入到Pod的环境变量或挂载到文件系统中。
-    
+7. Volume （卷）：
 
 Kubernetes还有其他组件和功能，如存储管理、自动扩缩容、日志监控、安全性等。它提供了丰富的API和命令行工具，使开发人员和运维团队可以方便地管理和操作Kubernetes集群。
 
 Kubernetes的优势包括高度可扩展性、高可用性、自动化管理、弹性伸缩、故障恢复等。它已成为云原生应用程序部署和管理的事实标准，并被广泛应用于各种规模和类型的应用程序。
 
+![](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/202406151436488.webp)
 
 ## K8S架构
 
@@ -343,76 +359,4 @@ data:
     default-character-set=utf8mb4
 ```
 
-## 卷 volume
-
-https://www.yuque.com/wukong-zorrm/qdoy5p/df2ftr
-
-- 临时卷(Ephemeral Volume): 与Pod一起创建和删除，生命周期与Pod相同 
-	- emptyDir-作为缓存或存储日志 
-	- configMap、secret、downwardAPI 给Pod注入数据。
-- 持久卷(Persistent Volume): 删除Pod后，持久卷不会被删除 
-	- 本地存储：hostPath、local
-	- 网络存储：NFS 
-	- 分布式存储：Ceph(cephfs:文件存储、rbd块存储)
-- 投射卷(Projected Volumes)：projected卷可以将多个卷映射到同一个目录上
-
-![image.png](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/20231213210454.png)
-
-
-### 临时卷
-
-与Pod一起创建和删除，生命周期与Pod相同 
-- emptyDir：初始内容为空的本地临时目录 
-- configMap：为Pod注入配置文件 
-- secret：为Pod注入加密数据
-
-#### emptyDir
-
-emptyDir会创建一个初始状态为空的目录，存储空间来自本地的kubelet根目录或内存(需要将`emptyDir.medium`设置为`Memory`)。通常使用本地临时存储来设置缓存、保存日志等。例如，将redis的存储目录设置为emptyDir
-
-### 持久卷与持久卷声明
-
-持久卷(Persistent Volume)：删除Pod后，卷不会被删除  
-- 本地存储  
-	- [hostPath](https://kubernetes.io/zh-cn/docs/concepts/storage/volumes/#hostpath)节点主机上的目录或文件 (仅供单节点测试使用；多节点集群请用 local 卷代替)  
-	- [local](https://kubernetes.io/zh-cn/docs/concepts/storage/volumes/#local) - 节点上挂载的本地存储设备(不支持动态创建卷)  
-- 网络存储  
-	- [NFS](https://kubernetes.io/zh-cn/docs/concepts/storage/volumes/#nfs) - 网络文件系统 (NFS)  
-- 分布式存储  
-	- Ceph([cephfs](https://kubernetes.io/zh-cn/docs/concepts/storage/volumes/#cephfs)文件存储、[rbd](https://kubernetes.io/zh-cn/docs/concepts/storage/volumes/#rbd)块存储)
-
-**持久卷（PersistentVolume，PV）** 是集群中的一块存储。可以理解为一块虚拟硬盘。
-持久卷可以由管理员事先创建， 或者使用[存储类（Storage Class）](https://kubernetes.io/zh-cn/docs/concepts/storage/storage-classes/)根据用户请求来动态创建。
-持久卷属于集群的公共资源，并不属于某个`namespace`;
-
-**持久卷声明（PersistentVolumeClaim，PVC）** 表达的是用户对存储的请求。
-PVC声明好比申请单，它更贴近云服务的使用场景，使用资源先申请，便于统计和计费。
-Pod 将 PVC 声明当做存储卷来使用，PVC 可以请求指定容量的存储空间和[访问模式](https://kubernetes.io/zh-cn/docs/concepts/storage/persistent-volumes/#access-modes) 。PVC对象是带有`namespace`的。
-
-![image.png](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/20231213210941.png)
-
-#### 创建持久卷
-
-创建持久卷(PV)是服务端的行为，通常集群管理员会提前创建一些常用规格的持久卷以备使用。
-
-`hostPath`仅供单节点测试使用，当Pod被重新创建时，可能会被调度到与原先不同的节点上，导致新的Pod没有数据。多节点集群使用本地存储，可以使用`local`卷
-
-创建`local`类型的持久卷，需要先创建存储类(StorageClass)。
-
-```yaml
-# 创建本地存储类
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: local-storage
-provisioner: kubernetes.io/no-provisioner
-volumeBindingMode: Immediate
-```
-
-
-`local`卷不支持动态创建，必须手动创建持久卷(PV)。
-创建`local`类型的持久卷，**必须**设置`nodeAffinity`(节点亲和性)。
-调度器使用`nodeAffinity`信息来将使用`local`卷的 Pod 调度到持久卷所在的节点上，不会出现Pod被调度到别的节点上的情况。
-
->注意：`local`卷也存在自身的问题，当Pod所在节点上的存储出现故障或者整个节点不可用时，Pod和卷都会失效，仍然会丢失数据，因此最安全的做法还是将数据存储到集群之外的存储或云存储上。
-
+[[云原生/Volume -- K8S\|Volume -- K8S]]

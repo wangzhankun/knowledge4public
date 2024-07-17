@@ -1,12 +1,12 @@
 ---
-{"dg-publish":true,"page-title":"什么是 eBPF ? An Introduction and Deep Dive into the eBPF Technology","url":"https://ebpf.io/zh-cn/what-is-ebpf/","tags":null,"permalink":"/体系结构与操作系统/ebpf/什么是 eBPF  An Introduction and Deep Dive into the eBPF Technology/","dgPassFrontmatter":true}
+{"dg-publish":true,"page-title":"什么是 eBPF ? An Introduction and Deep Dive into the eBPF Technology","url":"https://ebpf.io/zh-cn/what-is-ebpf/","tags":["ebpf"],"permalink":"/体系结构与操作系统/ebpf/什么是 eBPF  An Introduction and Deep Dive into the eBPF Technology/","dgPassFrontmatter":true}
 ---
 
 eBPF 是一项革命性的技术，起源于 Linux 内核，它可以在特权上下文中（如操作系统内核）运行沙盒程序。它用于安全有效地扩展内核的功能，而无需通过更改内核源代码或加载内核模块的方式来实现。
 
 从历史上看，由于内核具有监督和控制整个系统的特权，操作系统一直是实现可观测性、安全性和网络功能的理想场所。同时，由于操作系统内核的核心地位和对稳定性和安全性的高要求，操作系统内核很难快速迭代发展。因此在传统意义上，与在操作系统本身之外实现的功能相比，操作系统级别的创新速度要慢一些。
 
-  [![Overview](https://ebpf.io/static/e293240ecccb9d506587571007c36739/b14d5/overview.png)](https://ebpf.io/static/e293240ecccb9d506587571007c36739/f2674/overview.png)
+  ![](https://ebpf.io/static/e293240ecccb9d506587571007c36739/f2674/overview.png)
 
 eBPF 从根本上改变了这个方式。通过允许在操作系统中运行沙盒程序的方式，应用程序开发人员可以运行 eBPF 程序，以便在运行时向操作系统添加额外的功能。然后在 JIT 编译器和验证引擎的帮助下，操作系统确保它像本地编译的程序一样具备安全性和执行效率。这引发了一股基于 eBPF 的项目热潮，它们涵盖了广泛的用例，包括下一代网络实现、可观测性和安全功能等领域。
 

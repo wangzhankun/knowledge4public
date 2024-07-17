@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"page-title":"什么是VXLAN - 华为","url":"https://support.huawei.com/enterprise/zh/doc/EDOC1100087027","tags":null,"permalink":"/计算机网络/什么是VXLAN - 华为/","dgPassFrontmatter":true}
+{"dg-publish":true,"page-title":"什么是VXLAN - 华为","url":"https://support.huawei.com/enterprise/zh/doc/EDOC1100087027","tags":["网络/vxlan"],"permalink":"/计算机网络/什么是VXLAN - 华为/","dgPassFrontmatter":true}
 ---
 
 转载自：  https://support.huawei.com/enterprise/zh/doc/EDOC1100087027
