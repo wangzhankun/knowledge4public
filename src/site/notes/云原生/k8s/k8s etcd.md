@@ -5,7 +5,7 @@
 
 ### Kubernetes中的etcd组件
 
-etcd是Kubernetes集群的核心组件之一，它作为一个高度可靠、分布式的键值存储数据库，用于存储集群的共享配置和服务发现信息。etcd在Kubernetes架构中扮演着关键角色，是集群状态数据的关键存储后端。它不仅存储了Kubernetes集群中的所有对象的状态信息，包括Pods、Nodes、Services、Replication Controllers等，还负责集群的配置共享、领导者选举以及服务发现等功能。 
+etcd是Kubernetes集群的核心组件之一，它作为一个高度可靠、分布式的键值存储数据库，用于存储集群的共享配置和服务发现信息。etcd在Kubernetes架构中扮演着关键角色，是集群状态数据的关键存储后端。它不仅存储了Kubernetes集群中的所有对象的状态信息，包括Pods、Nodes、Services、Replication Controllers（已经被ReplicationSet取代）等，还负责集群的配置共享、领导者选举以及服务发现等功能。 
 
 etcd的设计目标是提供高可用性、强一致性和良好的性能。它通过Raft一致性算法来确保所有节点上的数据副本保持一致，即使在网络不稳定或节点故障的情况下也能维持数据的一致性。此外，etcd支持SSL/TLS加密通信，能够实施客户端证书认证以增强安全防护，并且具有较高的读写性能，适合大规模集群的数据存取需求。 
 

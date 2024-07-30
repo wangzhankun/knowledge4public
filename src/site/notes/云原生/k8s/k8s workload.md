@@ -8,6 +8,10 @@
 
 在 Kubernetes (k8s) 中，工作负载（Workloads）是指运行在集群上的应用程序。这些应用程序可以由单个组件或多个组件共同协作完成。工作负载通常通过一组称为 Pod 的单元来表示，Pod 包含一个或多个紧密耦合的容器。Kubernetes 提供了多种内置的工作负载资源，包括 Deployment、StatefulSet、DaemonSet、Job 和 CronJob，这些资源帮助用户以声明式的方式管理应用程序的生命周期，无需直接管理每个单独的 Pod. 
 
+> k8s直接创建的pod的恢复过程永远发生在当前节点上，一旦一个pod与一个节点绑定，除非这个绑定发生了变化（pod.spec.node 字段被修改），否则它永远不会离开这个节点。这也意味着，如果这个宿主机宕机了，这个pod也不会主动迁移到其他节点上去。
+> 如果希望pod出现在其他可用的节点上，那么就必须使用Deployment这样的“控制器”来管理pod。
+> k8s中的所谓重启机制是不存在的，它只是重建了一个pod。
+
 ### 常见的 Kubernetes 工作负载资源
 
 ### 工作负载资源的管理
@@ -18,7 +22,6 @@ Kubernetes 工作负载资源通过控制器来管理。控制器利用标签选
 
 ## **深入研究**
 
-### **Kubernetes 中的 DaemonSet 与Deployment有什么不同？**
 
 ### Kubernetes 中的 DaemonSet 与 Deployment 的区别
 

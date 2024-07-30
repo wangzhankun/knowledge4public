@@ -24,9 +24,7 @@ Kubernetes 社区提供了一些列的工具来监控容器和集群的状态，
 -   [Heapster](https://github.com/kubernetes/heapster) 提供了整个集群的资源监控，并支持持久化数据存储到 InfluxDB 等后端存储中（已弃用）
     
 
-## 
-
-cAdvisor
+## cAdvisor
 
 [cAdvisor](https://github.com/google/cadvisor) 是一个来自 Google 的容器监控工具，也是 Kubelet 内置的容器资源收集工具。它会自动收集本机容器 CPU、内存、网络和文件系统的资源占用情况，并对外提供 cAdvisor 原生的 API（默认端口为 `--cadvisor-port=4194`）。
 
@@ -47,17 +45,13 @@ helm install stable/prometheus --set rbac.create=true --name prometheus --namesp
 
 注意：cadvisor 监听的端口将在 v1.12 中删除，建议所有外部工具使用 Kubelet Metrics API 替代。
 
-## 
-
-InfluxDB 和 Grafana
+## InfluxDB 和 Grafana
 
 [InfluxDB](https://www.influxdata.com/time-series-platform/influxdb/) 是一个开源分布式时序、事件和指标数据库；而 [Grafana](http://grafana.org/) 则是 InfluxDB 的 Dashboard，提供了强大的图表展示功能。它们常被组合使用展示图表化的监控数据。
 
 ![](https://kubernetes.feisky.xyz/~gitbook/image?url=https%3A%2F%2F1674448607-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-LDAOok5ngY4pc1lEDes-887967055%252Fuploads%252Fgit-blob-ed91c3b66f02ca405deddff6d28cc19ad4f07231%252F14842114123604.jpg%3Falt%3Dmedia&width=768&dpr=4&quality=100&sign=690958ae&sv=1)
 
-## 
-
-Heapster
+## Heapster
 
 Kubelet 内置的 cAdvisor 只提供了单机的容器资源占用情况，而 [Heapster](https://github.com/kubernetes/heapster) 则提供了整个集群的资源监控，并支持持久化数据存储到 InfluxDB、Google Cloud Monitoring 或者 [其他的存储后端](https://github.com/kubernetes/heapster)。注意：
 
@@ -72,9 +66,7 @@ Heapster 首先从 Kubernetes apiserver 查询所有 Node 的信息，然后再�
 
 ![](https://kubernetes.feisky.xyz/~gitbook/image?url=https%3A%2F%2F1674448607-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-LDAOok5ngY4pc1lEDes-887967055%252Fuploads%252Fgit-blob-68ab6e2b0de6b350791bedce64d7a8e2529d5e81%252F14842118198998%2520%286%29.png%3Falt%3Dmedia&width=768&dpr=4&quality=100&sign=c38f5934&sv=1)
 
-### 
-
-部署 Heapster、InfluxDB 和 Grafana
+### 部署 Heapster、InfluxDB 和 Grafana
 
 在 Kubernetes 部署成功后，dashboard、DNS 和监控的服务也会默认部署好，比如通过 `cluster/kube-up.sh` 部署的集群默认会开启以下服务：
 
@@ -107,9 +99,7 @@ kubectl proxy --address='0.0.0.0' --port=8080 --accept-hosts='^*
 
 ![](https://kubernetes.feisky.xyz/~gitbook/image?url=https%3A%2F%2F1674448607-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-LDAOok5ngY4pc1lEDes-887967055%252Fuploads%252Fgit-blob-d0ab5c17c9514e73df7fd497a0580c947966890a%252Fgrafana%2520%284%29.png%3Falt%3Dmedia&width=768&dpr=4&quality=100&sign=e42a53cd&sv=1)
 
-## 
-
-Prometheus
+## Prometheus
 
 [Prometheus](https://prometheus.io/) 是另外一个监控和时间序列数据库，并且还提供了告警的功能。它提供了强大的查询语言和 HTTP 接口，也支持将数据导出到 Grafana 中展示。
 
@@ -161,9 +151,7 @@ kubectl port-forward -n monitoring service/kube-prometheus-grafana :80
 
 > 注意：Prometheus Operator 不支持通过 `prometheus.io/scrape` 注解来发现服务，需要你定义[ServiceMonitor](https://github.com/coreos/prometheus-operator/blob/master/Documentation/user-guides/running-exporters.md#generic-servicemonitor-example) 才会去抓取服务的度量数据。
 
-## 
-
-Node Problem Detector
+## Node Problem Detector
 
 Kubernetes node 有可能会出现各种硬件、内核或者运行时等问题，这些问题有可能导致服务异常。而 Node Problem Detector（NPD）就是用来监测这些异常的服务。NPD 以 DaemonSet 的方式运行在每台 Node 上面，并在异常发生时更新 NodeCondition（比如 KernelDaedlock、DockerHung、BadDisk 等）或者 Node Event（比如 OOM Kill 等）。
 
@@ -178,9 +166,7 @@ helm update
 helm install feisky/node-problem-detector --namespace kube-system --name npd
 ```
 
-## 
-
-Node 重启守护进程
+## Node 重启守护进程
 
 Kubernetres 集群中的节点通常会开启自动安全更新，这样有助于尽可能避免因系统漏洞带来的损失。但一般来说，涉及到内核的更新需要重启系统才可生效。此时，就需要手动或自动的方法来重启节点。
 
@@ -203,15 +189,11 @@ Kubernetres 集群中的节点通常会开启自动安全更新，这样有助�
 kubectl apply -f https://github.com/weaveworks/kured/releases/download/1.0.0/kured-ds.yaml
 ```
 
-## 
-
-其他容器监控系统
+## 其他容器监控系统
 
 除了以上监控工具，还有很多其他的开源或商业系统可用来辅助监控，如
 
-### 
-
-sysdig
+### sysdig
 
 sysdig 是一个容器排错工具，提供了开源和商业版本。对于常规排错来说，使用开源版本即可。
 
@@ -222,9 +204,7 @@ sysdig 是一个容器排错工具，提供了开源和商业版本。对于常�
 -   [sysdig-inspect](https://github.com/draios/sysdig-inspect)：为 sysdig 保存的跟踪文件（如 `sudo sysdig -w filename.scap`）提供了一个图形界面（非实时）
     
 
-#### 
-
-安装 sysdig
+#### 安装 sysdig
 
 ```
 # on Linux
@@ -262,9 +242,7 @@ sysdig -pc -c spy_users
 sysdig evt.type=open and fd.name
 ```
 
-### 
-
-Weave Scope
+### Weave Scope
 
 Weave Scope 是另外一款可视化容器监控和排错工具。与 sysdig 相比，它没有强大的命令行工具，但提供了一个简单易用的交互界面，自动描绘了整个集群的拓扑，并可以通过插件扩展其功能。从其官网的介绍来看，其提供的功能包括
 
@@ -292,9 +270,7 @@ Weave Scope 由 [App 和 Probe 两部分](https://www.weave.works/docs/scope/lat
                     +-----------------------+      +-----------------------+
 ```
 
-#### 
-
-安装 Weave scope
+#### 安装 Weave scope
 
 ```
 kubectl apply -f "https://cloud.weave.works/k8s/scope.yaml?k8s-version=$(kubectl version | base64 | tr -d '\n')&k8s-service-type=LoadBalancer"
@@ -312,18 +288,14 @@ kubectl -n weave get service weave-scope-app
 
 ![](https://kubernetes.feisky.xyz/~gitbook/image?url=https%3A%2F%2F1674448607-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-LDAOok5ngY4pc1lEDes-887967055%252Fuploads%252Fgit-blob-e10f1ca93c8fb24ccf4c05f01a18909712e82e2d%252Fscope-pod%2520%284%29.png%3Falt%3Dmedia&width=768&dpr=4&quality=100&sign=90ec3aa5&sv=1)
 
-## 
-
-参考文档 &
+ &
 ```
 
 然后打开 `http://<master-ip>:8080/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana` 就可以访问 Grafana。
 
 ![](https://kubernetes.feisky.xyz/~gitbook/image?url=https%3A%2F%2F1674448607-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-LDAOok5ngY4pc1lEDes-887967055%252Fuploads%252Fgit-blob-d0ab5c17c9514e73df7fd497a0580c947966890a%252Fgrafana%2520%284%29.png%3Falt%3Dmedia&width=768&dpr=4&quality=100&sign=e42a53cd&sv=1)
 
-## 
-
-Prometheus
+## Prometheus
 
 [Prometheus](https://prometheus.io/) 是另外一个监控和时间序列数据库，并且还提供了告警的功能。它提供了强大的查询语言和 HTTP 接口，也支持将数据导出到 Grafana 中展示。
 
@@ -363,9 +335,7 @@ prometheus-web
 
 > 注意：Prometheus Operator 不支持通过 `prometheus.io/scrape` 注解来发现服务，需要你定义[ServiceMonitor](https://github.com/coreos/prometheus-operator/blob/master/Documentation/user-guides/running-exporters.md#generic-servicemonitor-example) 才会去抓取服务的度量数据。
 
-## 
-
-Node Problem Detector
+## Node Problem Detector
 
 Kubernetes node 有可能会出现各种硬件、内核或者运行时等问题，这些问题有可能导致服务异常。而 Node Problem Detector（NPD）就是用来监测这些异常的服务。NPD 以 DaemonSet 的方式运行在每台 Node 上面，并在异常发生时更新 NodeCondition（比如 KernelDaedlock、DockerHung、BadDisk 等）或者 Node Event（比如 OOM Kill 等）。
 
@@ -373,9 +343,7 @@ Kubernetes node 有可能会出现各种硬件、内核或者运行时等问题�
 
 {{CODE_BLOCK_9}}
 
-## 
-
-Node 重启守护进程
+## Node 重启守护进程
 
 Kubernetres 集群中的节点通常会开启自动安全更新，这样有助于尽可能避免因系统漏洞带来的损失。但一般来说，涉及到内核的更新需要重启系统才可生效。此时，就需要手动或自动的方法来重启节点。
 
@@ -396,15 +364,11 @@ Kubernetres 集群中的节点通常会开启自动安全更新，这样有助�
 
 {{CODE_BLOCK_10}}
 
-## 
-
-其他容器监控系统
+## 其他容器监控系统
 
 除了以上监控工具，还有很多其他的开源或商业系统可用来辅助监控，如
 
-### 
-
-sysdig
+### sysdig
 
 sysdig 是一个容器排错工具，提供了开源和商业版本。对于常规排错来说，使用开源版本即可。
 
@@ -415,9 +379,7 @@ sysdig 是一个容器排错工具，提供了开源和商业版本。对于常�
 -   [sysdig-inspect](https://github.com/draios/sysdig-inspect)：为 sysdig 保存的跟踪文件（如 `sudo sysdig -w filename.scap`）提供了一个图形界面（非实时）
     
 
-#### 
-
-安装 sysdig
+#### 安装 sysdig
 
 {{CODE_BLOCK_11}}
 
@@ -425,9 +387,7 @@ sysdig 是一个容器排错工具，提供了开源和商业版本。对于常�
 
 {{CODE_BLOCK_12}}
 
-### 
-
-Weave Scope
+### Weave Scope
 
 Weave Scope 是另外一款可视化容器监控和排错工具。与 sysdig 相比，它没有强大的命令行工具，但提供了一个简单易用的交互界面，自动描绘了整个集群的拓扑，并可以通过插件扩展其功能。从其官网的介绍来看，其提供的功能包括
 
@@ -440,9 +400,7 @@ Weave Scope 由 [App 和 Probe 两部分](https://www.weave.works/docs/scope/lat
 
 {{CODE_BLOCK_13}}
 
-#### 
-
-安装 Weave scope
+#### 安装 Weave scope
 
 {{CODE_BLOCK_14}}
 
@@ -456,6 +414,3 @@ Weave Scope 由 [App 和 Probe 两部分](https://www.weave.works/docs/scope/lat
 
 ![](https://kubernetes.feisky.xyz/~gitbook/image?url=https%3A%2F%2F1674448607-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-LDAOok5ngY4pc1lEDes-887967055%252Fuploads%252Fgit-blob-e10f1ca93c8fb24ccf4c05f01a18909712e82e2d%252Fscope-pod%2520%284%29.png%3Falt%3Dmedia&width=768&dpr=4&quality=100&sign=90ec3aa5&sv=1)
 
-## 
-
-参考文档
