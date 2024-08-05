@@ -31,7 +31,7 @@ sudo make install
 
 3. 生成测试文件
 ```sh
-dd if=/dev/random of=/var/tmp/file1.db count=128 bs=1M
+dd if=/dev/random of=/var/tmp/file1.db bs=1M count=128 iflag=fullblock
 ```
 4. 清空page cache
 ```sh
@@ -65,4 +65,128 @@ Linux 页面缓存与 Linux 内存管理、cgroup 和虚拟文件系统（VFS）
 > **per cgroup pair** 是指在 Linux 页面缓存管理中，每个控制组（cgroup）都有一对活跃（active）和非活跃（inactive）的 LRU 列表。这对 LRU 列表用于管理该 cgroup 中的页面缓存，以决定哪些页面应该被保留在缓存中，哪些页面应该被回收以释放内存。具体来说，每个 cgroup 对包括：
    - 第一对 LRU 列表用于管理匿名内存（例如，通过 malloc() 分配或未通过文件后端的 mmap() 分配）。
 >   - 第二对 LRU 列表用于管理文件内存（包括所有文件操作，如 read()、write、文件 mmap() 访问等）。
+关于LRU列表的管理参见 [[体系结构与操作系统/Linux内核/linux内存源码分析 - 内存回收(lru链表)\|linux内存源码分析 - 内存回收(lru链表)]]
 
+
+# 实践
+## page cache and basic file operations
+
+### 概述
+本节将涉及以下内容：
+- sync（man 1 sync）：将脏页写入到持久化存储
+- - `/proc/sys/vm/drop_caches` ([`man 5 proc`](https://man7.org/linux/man-pages/man5/proc.5.html)) – the kernel `procfs` file to trigger Page Cache clearance;
+- [`vmtouch`](https://github.com/hoytech/vmtouch) – a tool for getting Page Cache info about a particular file by its path.
+
+### 读操作
+#### read syscall
+
+```py
+# dd if=/dev/random of=/var/tmp/file1.db bs=1M count=128 iflag=fullblock
+with open("/var/tmp/file1.db", "rb") as f:  
+    print(f.read(2))
+```
+
+跟踪系统调用：
+```sh
+sync; echo 3 | sudo tee /proc/sys/vm/drop_caches # 清空page cache
+strace -s0 python3 ./read_2_bytes.py
+```
+
+![image.png](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/202407311504655.png)
+
+>The `read()` syscall returned 4096 bytes (one page) even though the script asked only for 2 bytes. It’s an example of python optimizations and internal buffered IO. Although this is beyond the scope of this post, but in some cases it is important to keep this in mind.
+
+使用`vmtouch`检查内核缓存了多少数据
+```sh
+vmtouch /var/tmp/file1.db
+```
+
+![image.png](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/202407311516857.png)
+
+从上图可以看出，尽管我们在python代码中仅要求读取2字节，python自动优化读取4KB，但是内核帮我们缓存了16KB。这是因为内核实现了**预读逻辑**，对内核而言顺序读写的开销并不高，因此预读一部分内容进入内存可以加快读取速度。`posix_fadvise()` ([`man 2 posix_fadvise`](https://man7.org/linux/man-pages/man2/posix_fadvise.2.html)) and `readahead()` ([`man 2 readahead`](https://man7.org/linux/man-pages/man2/readahead.2.html)).可以控制预读行为。
+
+下面我们使用`posix_fadvise()`机制告诉内核我们将对文件进行随机读取，关闭预读机制：
+首先驱逐页缓存`sync; echo 3 | sudo tee /proc/sys/vm/drop_caches`，然后执行下面的代码
+
+```py
+import os
+with open("/var/tmp/file1.db", "rb") as f:
+	fd = f.fileno()
+	os.posix_fadvise(fd, 0, os.fstat(fd).st_size, os.POSIX_FADV_RANDOM)
+	print(f.read(2))
+```
+
+使用`vmtouch /var/tmp/file1.db`观察结果：
+![image.png](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/202407311524116.png)
+
+此时就只缓存了一个页面
+
+> Note：内核在对数据进行缓存时都是以页为单位的
+
+
+#### mmap syscall
+```py
+import mmap
+
+with open("/var/tmp/file1.db", "r") as f:
+    with mmap.mmap(f.fileno(), 0, prot=mmap.PROT_READ) as mm:
+        print(mm[:2])
+        
+```
+
+```sh
+echo 3 | sudo tee /proc/sys/vm/drop_caches && python3 ./test.py
+
+vmtouch /var/tmp/file1.db 
+```
+
+可以看到mmap采取了更为激进的预读策略：
+
+```log
+           Files: 1
+     Directories: 0
+  Resident Pages: 32/32768  128K/128M  0.0977%
+         Elapsed: 0.000458 seconds
+```
+
+下面关闭预读：
+```py
+import mmap
+
+with open("/var/tmp/file1.db", "r") as f:
+    with mmap.mmap(f.fileno(), 0, prot=mmap.PROT_READ) as mm:
+        mm.madvise(mmap.MADV_RANDOM) # python 3.8+
+        print(mm[:2])
+```
+
+```sh
+echo 3 | sudo tee /proc/sys/vm/drop_caches && python3 ./test.py   
+```
+
+```
+           Files: 1
+     Directories: 0
+  Resident Pages: 1/32768  4K/128M  0.00305%
+         Elapsed: 0.000466 seconds
+```
+
+### 写操作
+
+```py
+with open("/var/tmp/file1.db", "rb+") as f:
+    print(f.write(b"ab"))
+```
+
+```sh
+sync; echo 3 | sudo tee /proc/sys/vm/drop_caches && python3 ./test.py 
+```
+
+```sh
+$ vmtouch /var/tmp/file1.db 
+           Files: 1
+     Directories: 0
+  Resident Pages: 1/32768  4K/128M  0.00305%
+         Elapsed: 0.000453 seconds
+```
+
+内核缓存了4KB
