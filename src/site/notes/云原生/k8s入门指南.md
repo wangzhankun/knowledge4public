@@ -36,9 +36,9 @@
 - [[云原生/k8s/k8s flannel\|k8s flannel]]
 - [[云原生/k8s/k8s etcd\|k8s etcd]]
 - [[云原生/k8s/cni\|cni]]
-- [[云原生/K8S 三种探针 ReadinessProbe、LivenessProbe和StartupProbe 之探索_readinessprobe failurethreshold-CSDN博客.md\|K8S 三种探针 ReadinessProbe、LivenessProbe和StartupProbe 之探索_readinessprobe failurethreshold-CSDN博客.md]]
 - [[云原生/Volume -- K8S\|Volume -- K8S]]
 - [[云原生/容器技术/(四)Cgroup详解 - 掘金\|(四)Cgroup详解 - 掘金]]
+- [[云原生/K8S 三种探针 ReadinessProbe、LivenessProbe和StartupProbe 之探索_readinessprobe failurethreshold-CSDN博客.md\|K8S 三种探针 ReadinessProbe、LivenessProbe和StartupProbe 之探索_readinessprobe failurethreshold-CSDN博客.md]]
 
 { .block-language-dataview}
 

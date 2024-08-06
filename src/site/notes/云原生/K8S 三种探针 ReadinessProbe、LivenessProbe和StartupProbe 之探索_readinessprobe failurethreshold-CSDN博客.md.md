@@ -23,17 +23,17 @@
 -   **Failed**：Pod 中所以容器都已退出，但是至少还有一个容器退出时为失败状态。
 -   **Unknown**：未知状态，所谓 pod 是什么状态是 apiserver 和运行在 pod 节点的 kubelet 进行通信获取状态信息的，如果节点之上的 kubelet 本身出故障，那么 apiserver 就连不上 kubelet，得不到信息了，就会看 Unknown
 
-![Pod状态轮](https://img-blog.csdnimg.cn/img_convert/33c6e88cbcf2aaa6517ce6d29ee12bd0.webp?x-oss-process=image/format,png)
+![giphb](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/202408061202109.png)
 
-###Pod 重启策略
+### Pod 重启策略
 
 -   **Always**: 只要容器失效退出就重新启动容器。
 -   **OnFailure**: 当容器以非正常(异常)退出后才自动重新启动容器。
 -   **Never**: 无论容器状态如何，都不重新启动容器。
 
-###Pod 常见状态转换场景
+### Pod 常见状态转换场景
 
-![Pod状态转换](https://img-blog.csdnimg.cn/img_convert/6ab9d7e9dbef5e8bd256721943a6e414.webp?x-oss-process=image/format,png)
+![vapn1](https://imp-repo-1300501708.cos.ap-beijing.myqcloud.com/202408061202113.png)
 
 ### [探针](https://so.csdn.net/so/search?q=%E6%8E%A2%E9%92%88&spm=1001.2101.3001.7020)简介
 
@@ -51,8 +51,8 @@ K8S 提供了 3 种探针:
 
 有了存活性探针能保证程序在运行中如果挂掉能够自动重启，但是还有个经常遇到的问题，比如说，在 Kubernetes 中启动 Pod，显示明明 Pod 已经启动成功，且能访问里面的端口，但是却返回错误信息。还有就是在执行滚动更新时候，总会出现一段时间，Pod 对外提供网络访问，但是访问却发生 404，这两个原因，都是因为 Pod 已经成功启动，但是 Pod 的的容器中应用程序还在启动中导致，考虑到这点 Kubernetes 推出了就绪性探针机制。
 
-1.  **LivenessProbe**： 存活性探针，用于判断容器是不是健康，如果不满足健康条件，那么 Kubelet 将根据 Pod 中设置的 restartPolicy （重启策略）来判断，Pod 是否要进行重启操作。LivenessProbe 按照配置去探测 ( 进程、或者端口、或者命令执行后是否成功等等)，来判断容器是不是正常。如果探测不到，代表容器不健康（可以配置连续多少次失败才记为不健康），则 kubelet 会杀掉该容器，并根据容器的重启策略做相应的处理。如果未配置存活探针，则默认容器启动为通过（Success）状态。即探针返回的值永远是 Success。即 Success 后 pod 状态是 RUNING
-2.  **ReadinessProbe**： 就绪性探针，用于判断容器内的程序是否存活（或者说是否健康），只有程序(服务)正常， 容器开始对外提供网络访问（启动完成并就绪）。容器启动后按照 ReadinessProbe 配置进行探测，无问题后结果为成功即状态为 Success。pod 的 READY 状态为 true，从 0/1 变为 1/1。如果失败继续为 0/1，状态为 false。若未配置就绪探针，则默认状态容器启动后为 Success。对于此 pod、此 pod 关联的 Service 资源、EndPoint 的关系也将基于 Pod 的 Ready 状态进行设置，如果 Pod 运行过程中 Ready 状态变为 false，则系统自动从 Service 资源 关联的 EndPoint 列表中去除此 pod，届时 service 资源接收到 GET 请求后，kube-proxy 将一定不会把流量引入此 pod 中，通过这种机制就能防止将流量转发到不可用的 Pod 上。如果 Pod 恢复为 Ready 状态。将再会被加回 Endpoint 列表。kube-proxy 也将有概率通过负载机制会引入流量到此 pod 中。
+1.  **LivenessProbe**： **存活性探针，用于判断容器是不是健康，如果不满足健康条件，那么 Kubelet 将根据 Pod 中设置的 restartPolicy （重启策略）来判断，Pod 是否要进行重启操作。** LivenessProbe 按照配置去探测 ( 进程、或者端口、或者命令执行后是否成功等等)，来判断容器是不是正常。如果探测不到，代表容器不健康（可以配置连续多少次失败才记为不健康），则 kubelet 会杀掉该容器，并根据容器的重启策略做相应的处理。如果未配置存活探针，则默认容器启动为通过（Success）状态。即探针返回的值永远是 Success。即 Success 后 pod 状态是 RUNING
+2.  **ReadinessProbe**： **就绪性探针，用于判断容器内的程序是否存活（或者说是否健康），只有程序(服务)正常， 容器开始对外提供网络访问（启动完成并就绪）。** 容器启动后按照 ReadinessProbe 配置进行探测，无问题后结果为成功即状态为 Success。pod 的 READY 状态为 true，从 0/1 变为 1/1。如果失败继续为 0/1，状态为 false。若未配置就绪探针，则默认状态容器启动后为 Success。对于此 pod、此 pod 关联的 Service 资源、EndPoint 的关系也将基于 Pod 的 Ready 状态进行设置，如果 Pod 运行过程中 Ready 状态变为 false，则系统自动从 Service 资源 关联的 EndPoint 列表中去除此 pod，届时 service 资源接收到 GET 请求后，kube-proxy 将一定不会把流量引入此 pod 中，通过这种机制就能防止将流量转发到不可用的 Pod 上。如果 Pod 恢复为 Ready 状态。将再会被加回 Endpoint 列表。kube-proxy 也将有概率通过负载机制会引入流量到此 pod 中。
 3.  **StartupProbe**: StartupProbe 探针，主要解决在复杂的程序中 ReadinessProbe、LivenessProbe 探针无法更好的判断程序是否启动、是否存活。进而引入 StartupProbe 探针为 ReadinessProbe、LivenessProbe 探针服务。
 
 #### ReadinessProbe 与 LivenessProbe 的区别
